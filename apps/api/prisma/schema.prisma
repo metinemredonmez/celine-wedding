@@ -1,0 +1,134 @@
+// Celine Gelinlik — Prisma schema
+//
+// NOTE: docs/DATA-MODEL.md targets the Prisma 7 bleeding-edge `prisma-client`
+// generator with a custom `output`. For this first, basic push we deliberately
+// use the STABLE `prisma-client-js` generator (default output into node_modules,
+// imported from `@prisma/client`) for reliability. The models, enums, relations
+// and indexes below match DATA-MODEL.md verbatim.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────── ENUMS ───────────────────────────
+
+enum DressStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum AppointmentStatus {
+  NEW
+  CONTACTED
+  DONE
+}
+
+enum AdminRole {
+  ADMIN
+}
+
+// ────────────────────────── MODELS ───────────────────────────
+
+model Collection {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  coverImage  String? // Cloudinary secure_url of cover (optional)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  dresses Dress[]
+
+  @@index([order])
+  @@map("collections")
+}
+
+model Dress {
+  id          String      @id @default(cuid())
+  name        String // "model" / product name
+  slug        String      @unique
+  description String?
+  price       Decimal?    @db.Decimal(10, 2) // optional; boutiques often hide price
+  fabric      String?
+  details     String? // free-text extra details
+  status      DressStatus @default(DRAFT)
+  featured    Boolean     @default(false)
+  order       Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  collectionId String?
+  collection   Collection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+
+  images Image[]
+
+  // Public queries filter by status+featured and sort by order/createdAt.
+  @@index([status, featured, order])
+  @@index([collectionId, status])
+  @@index([slug])
+  @@map("dresses")
+}
+
+model Image {
+  id        String   @id @default(cuid())
+  url       String // Cloudinary secure_url
+  publicId  String   @unique // Cloudinary public_id — needed to delete/transform
+  alt       String?
+  width     Int?
+  height    Int?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  dressId String
+  dress   Dress  @relation(fields: [dressId], references: [id], onDelete: Cascade)
+
+  @@index([dressId, order]) // fetch + order a dress's gallery
+  @@map("images")
+}
+
+model Appointment {
+  id            String            @id @default(cuid())
+  name          String
+  phone         String
+  email         String?
+  preferredDate DateTime?
+  message       String?
+  status        AppointmentStatus @default(NEW)
+  createdAt     DateTime          @default(now())
+
+  @@index([status, createdAt])
+  @@map("appointments")
+}
+
+model AdminUser {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  passwordHash     String
+  role             AdminRole @default(ADMIN)
+  refreshTokenHash String? // hashed current refresh token (rotation)
+  lastLoginAt      DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("admin_users")
+}
+
+model SiteSettings {
+  id        String   @id @default("singleton") // enforce one row
+  phone     String?
+  whatsapp  String?
+  instagram String?
+  address   String?
+  mapUrl    String?
+  about     String?  @db.Text
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}

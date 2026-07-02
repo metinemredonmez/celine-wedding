@@ -37,7 +37,7 @@ Kanonik admin rotaları `/admin/*` altındadır:
 | `/admin/ayarlar` | Site ayarları | İletişim, sosyal, adres, hero, hakkında. |
 | `/admin/hesap` | Hesap | Kendi parolasını değiştir; (sadece owner) personel yönetimi. |
 
-> Genel site rotaları (`/`, `/koleksiyonlar`, `/koleksiyonlar/[slug]`, `/modeller`, `/modeller/[dressSlug]`, `/randevu`, `/iletisim`, `/hakkimizda`, `/galeri`) için bkz. [Sayfalar](PAGES.md). Bir gelinlik = "model / gelinlik"; genel sitede `/modeller/[dressSlug]` altında görünür.
+> Genel site rotaları (`/`, `/koleksiyonlar`, `/koleksiyonlar/[slug]`, `/modeller` [etiket "GELİNLİKLER"], `/modeller/[dressSlug]`, `/ozel-dikim`, `/atolye`, `/randevu`, `/iletisim`, `/gercek-gelinler`) için bkz. [Sayfalar](PAGES.md). Bir gelinlik = "model / gelinlik"; genel sitede `/modeller/[dressSlug]` altında görünür.
 
 ### Ekran içerikleri
 

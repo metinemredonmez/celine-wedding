@@ -102,10 +102,12 @@ Diyagramdaki temel gözlemler:
 | `/koleksiyonlar/[slug]` | **SSG** (`generateStaticParams`) + tag revalidation | Tüm koleksiyonlar önceden build edilir; anlık LCP |
 | `/modeller` | ISR `3600` | Galeri/filtre; filtreleme client-side veya `searchParams` ile |
 | `/modeller/[dressSlug]` | **SSG** (`generateStaticParams`) + tag revalidation | Asıl dönüşüm sayfaları — LCP/SEO için mutlaka önceden render |
-| `/hakkimizda` | SSG (tamamen statik) | Veri yok |
+| `/ozel-dikim` | SSG + `/custom` singleton | Süreç anlatısı; nadir değişir |
+| `/atolye` | SSG + `/about` singleton | Atölye/kurucu hikâyesi (eski `/hakkimizda`) |
 | `/iletisim` | SSG + `/settings` verisi | İletişim + harita; ayarlar ISR ile tazelenir |
 | `/randevu` | Statik kabuk + client form island | Form bir Client Component; sayfanın kendisi statik |
-| `/galeri` (Phase 2) | ISR `3600` | Faz 2 galeri; lightbox dinamik import |
+| `/gercek-gelinler` (Faz 2; MVP placeholder) | ISR `3600` | Gerçek gelin grid + alıntılar |
+| `/galeri` (Faz 2) | ISR `3600` | Faz 2 galeri; lightbox dinamik import |
 | `/admin/**` | Tamamen **dynamic** (`force-dynamic`, no cache) | Auth korumalı, canlı veri |
 
 ### Veri çekme (Server Components → NestJS)
@@ -297,9 +299,11 @@ apps/web/
 │   │   │   ├── modeller/                  # gelinlikler (model)
 │   │   │   │   ├── page.tsx               # galeri / filtre (ISR)
 │   │   │   │   └── [dressSlug]/page.tsx   # gelinlik detay (ISR + generateStaticParams)
-│   │   │   ├── hakkimizda/page.tsx        # statik
+│   │   │   ├── ozel-dikim/page.tsx        # özel dikim / bespoke süreci (statik)
+│   │   │   ├── atolye/page.tsx            # atölye / hikâye (statik, eski hakkimizda)
 │   │   │   ├── randevu/page.tsx           # randevu formu (dynamic island)
 │   │   │   ├── iletisim/page.tsx          # iletişim + harita
+│   │   │   ├── gercek-gelinler/page.tsx   # gerçek gelinler (Faz 2; MVP placeholder)
 │   │   │   └── not-found.tsx
 │   │   ├── (admin)/                       # admin route group (kendi layout'u, SEO yok)
 │   │   │   ├── admin/

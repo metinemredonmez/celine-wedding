@@ -23,8 +23,8 @@ Anahtar kelimeleri tek bir ana sayfaya yığmak yerine **ayrı sayfalara** eşle
 | Grup | Anahtar kelimeler | Eşlenecek sayfa |
 |---|---|---|
 | Birincil | `gelinlik`, `butik gelinlik`, `gelinlik Maltepe`, `gelinlik İstanbul`, `Maltepe gelinlikçi`, `gelinlik modelleri 2026` | `/`, `/koleksiyonlar`, `/modeller` |
-| Uzun kuyruk / niyet | `özel dikim gelinlik İstanbul Anadolu Yakası`, `gelinlik provası randevu`, `abiye / nişanlık Maltepe`, `prenses model gelinlik` | Koleksiyon/model detay, `/randevu` |
-| Marka | `Celine Gelinlik`, `Celine Gelinlik Maltepe` | `/`, `/hakkimizda` |
+| Uzun kuyruk / niyet | `özel dikim gelinlik İstanbul Anadolu Yakası`, `gelinlik provası randevu`, `abiye / nişanlık Maltepe`, `prenses model gelinlik` | `/ozel-dikim`, Koleksiyon/model detay, `/randevu` |
+| Marka | `Celine Gelinlik`, `Celine Gelinlik Maltepe` | `/`, `/atolye` |
 
 > Not: Site kiralama/fiyat içermez; içerik "özel dikim", "atölye", "randevu ile prova" temalı Türkçe metinlerle beslenir.
 
@@ -117,7 +117,7 @@ Aktif olarak Google yorumu toplayın. Yorumlar hem yerel sıralamayı hem tıkla
 
 ## 2. Sitemap / robots / indeksleme
 
-- **`sitemap.xml`** Next.js `app/sitemap.ts` ile üretilir; tüm kanonik public rotaları (`/`, `/koleksiyonlar`, `/koleksiyonlar/[slug]`, `/modeller`, `/modeller/[dressSlug]`, `/randevu`, `/iletisim`, `/hakkimizda`) içerir.
+- **`sitemap.xml`** Next.js `app/sitemap.ts` ile üretilir; tüm kanonik public rotaları (`/`, `/koleksiyonlar`, `/koleksiyonlar/[slug]`, `/modeller`, `/modeller/[dressSlug]`, `/ozel-dikim`, `/atolye`, `/randevu`, `/iletisim`, `/gercek-gelinler`) içerir.
 - **`robots.txt`** Next.js `app/robots.ts` ile üretilir; taramaya izin verir ve sitemap'e işaret eder. `/admin/*` taramadan hariç tutulur.
 - Her ikisi de **Google Search Console**'a (ve Bing Webmaster'a) gönderilir; alan adı doğrulanır ve önemli sayfalar için indeksleme talep edilir.
 - **Canonical** etiketleri her sayfada tanımlanır (yinelenen içerik/parametre sorunlarını önlemek için).

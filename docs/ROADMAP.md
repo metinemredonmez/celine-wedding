@@ -58,10 +58,12 @@ Aşağıdaki sırayla, veri akışı ve navigasyon zinciri korunacak şekilde in
 2. [ ] **Koleksiyonlar** (`/koleksiyonlar`) — editorial grid
 3. [ ] **Koleksiyon Detay** (`/koleksiyonlar/[slug]`)
 4. [ ] **Model Detay** (`/modeller/[dressSlug]`) — bireysel gelinlik, galeri, sticky info, "Bu Gelinlik İçin Randevu Al"
-5. [ ] **Modeller** (`/modeller`) — tüm modellerin listesi
-6. [ ] **Randevu** (`/randevu`) — form + atölye bilgi kartı
-7. [ ] **İletişim** (`/iletisim`) — iletişim bilgileri + gömülü harita
-8. [ ] **Hakkımızda** (`/hakkimizda`) — MVP-lite, kısa olabilir
+5. [ ] **Gelinlikler** (`/modeller`, ekran etiketi "GELİNLİKLER") — tüm modellerin listesi
+6. [ ] **Özel Dikim** (`/ozel-dikim`) — bespoke süreç (istişare → eskiz → prova → dikim/teslim)
+7. [ ] **Atölye** (`/atolye`) — MVP-lite, kısa olabilir (eski Hakkımızda)
+8. [ ] **Randevu** (`/randevu`) — form + atölye bilgi kartı
+9. [ ] **İletişim** (`/iletisim`) — iletişim bilgileri + gömülü harita
+10. [ ] **Gerçek Gelinler** (`/gercek-gelinler`) — MVP'de placeholder (Faz 2'de zenginleşir)
 
 Her sayfanın section sırası ve içerik modeli için bkz. [Sayfalar](PAGES.md).
 
@@ -109,7 +111,7 @@ Amaç: markanın atölye deneyimini yansıtan, hızlı yüklenen, fotoğraf-önc
 ### Kapsam
 | Alan | Teslimat |
 |------|----------|
-| **Sayfalar** | Anasayfa, Koleksiyonlar, Koleksiyon detay, Modeller, Model detay, Randevu (+onay), İletişim, kısa Hakkımızda |
+| **Sayfalar** | Anasayfa, Koleksiyonlar, Koleksiyon detay, Gelinlikler (`/modeller`), Model detay, Özel Dikim, Atölye, Randevu (+onay), İletişim (Gerçek Gelinler MVP'de placeholder) |
 | **Global** | Header (scroll'da katılaşan), Footer, floating WhatsApp FAB, tekrar eden appointment CTA band'leri |
 | **Randevu** | Form → `POST /appointments` → owner e-posta bildirimi + WhatsApp `wa.me` prefill fallback |
 | **İçerik Modeli** | Collection, Dress (fiyatsız), `site_settings` — bkz. [Veri Modeli](DATA-MODEL.md) |
@@ -133,6 +135,7 @@ Amaç: markanın atölye deneyimini yansıtan, hızlı yüklenen, fotoğraf-önc
 Amaç: içerik derinliğini, yasal uyumluluğu ve operasyonel verimliliği artırmak.
 
 ### Kapsam
+- [ ] **Gerçek Gelinler** (`/gercek-gelinler`) — editoryal grid + kısa alıntılar; MVP placeholder'dan gerçek içeriğe zenginleştirme
 - [ ] **Galeri / Lookbook** (`/galeri`) — masonry/justified foto grid, koleksiyona göre filtre, lightbox
 - [ ] **SSS** (`/sss`) — accordion (randevu, prova/dikim süresi, ölçü, fiyat bilgisi randevuda, şehir dışı gelinler)
 - [ ] **KVKK / Gizlilik** + cookie/onay banner (yasal — TR zorunlu)
@@ -142,7 +145,7 @@ Amaç: içerik derinliğini, yasal uyumluluğu ve operasyonel verimliliği artı
 - [ ] **Spam koruması** — honeypot + reCAPTCHA / rate limiting
 
 ### Faz 2 Definition of Done
-- [ ] Galeri ve SSS canlı, içerik girilmiş
+- [ ] Gerçek Gelinler, Galeri ve SSS canlı, içerik girilmiş
 - [ ] KVKK metni yayında, cookie banner çalışıyor, consent kaydediliyor
 - [ ] Admin'de randevu durumu değiştirilebiliyor, WhatsApp/telefon tek tıkla açılıyor
 - [ ] Yeni randevuda owner anlık bildirim alıyor (e-posta + WhatsApp)
@@ -156,7 +159,6 @@ Amaç: içerik derinliğini, yasal uyumluluğu ve operasyonel verimliliği artı
 Amaç: markayı editorial olarak derinleştirmek, uluslararası erişimi açmak ve randevu operasyonunu otomatikleştirmek.
 
 ### Kapsam
-- [ ] **Gelin Hikâyeleri / Testimonials** (`/gelin-hikayeleri`) — gerçek gelin içerikleri
 - [ ] **Basında Biz** (`/basin`) — press mentions
 - [ ] **TR / EN çok dilli** — next-intl ile tam EN desteği, dil toggle (header)
 - [ ] **Gelişmiş SEO + schema.org** — `LocalBusiness`, `BreadcrumbList`, ürün/koleksiyon işaretleme (bkz. [SEO](SEO.md))
@@ -164,7 +166,7 @@ Amaç: markayı editorial olarak derinleştirmek, uluslararası erişimi açmak 
 - [ ] **Takvim / slot senkronizasyonu** — Google Calendar entegrasyonu, otomatik randevu hatırlatma mesajları
 
 ### Faz 3 Definition of Done
-- [ ] Gelin Hikâyeleri ve Basında Biz sayfaları canlı
+- [ ] Basında Biz sayfası canlı
 - [ ] Site TR + EN tam çalışır, dil toggle sorunsuz, tüm içerik iki dilde
 - [ ] schema.org işaretlemesi Rich Results Test'ten geçiyor
 - [ ] Randevular takvimle senkron, otomatik hatırlatma mesajları gidiyor

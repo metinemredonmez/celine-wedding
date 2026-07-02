@@ -40,9 +40,13 @@ Aşağıdaki couture markaları benchmark alındı. Her biri için sitesinden al
 
 Ek referanslar: Rosa Clará (rosaclara.es), Galia Lahav GALA hattı, Joyce Young / Wedding Atelier.
 
+### Celine için onaylanan referans karışımı
+
+Onaylanan karışım (bkz. [REFERENCES.md §2](REFERENCES.md)): **%60 Katherine Tash (sayfa/bölüm yapısı) + %25 CINQ (editoryal ton) + %15 AMSALE (randevu disiplini)**, üstünde **Danielle Frankel kalite tavanı** (yüzde payı almaz; kaliteyi ölçtüğümüz kuzey yıldızı). Aşağıdaki Reem Acra / Sassi Holford maddeleri bu karışımla uyumlu somut uygulama ilkeleridir.
+
 ### Celine için tavsiye edilen yön: **Reem Acra / Sassi Holford modeli**
 
-- **Full-bleed sabit görsel hero** + şiirsel başlık (yalnızca profesyonel çekim varsa video).
+- **Full-bleed sabit görsel hero** — tam ekran **tek büyük editoryal gelinlik fotoğrafı** (carousel/slider/video DEĞİL) + kısa marka cümlesi/slogan + iki buton ("Randevu Al" birincil, "Koleksiyonu Keşfet" ikincil). Girişte yavaş fade; hero görseli LCP olduğu için görselin kendisi animasyonlanmaz. (Danielle Frankel / Reem Acra tarzı.)
 - Koleksiyonlar **tema adlarıyla** (sezon değil) — "2024 Koleksiyonu" gibi bayatlayan etiketlerden kaçınılır.
 - **İsimli gelinlikler** (ör. "Aylin"); her modelin kısa romantik açıklaması + ön/arka/detay görselleri (`/modeller/[dressSlug]`).
 - Palet: **sıcak ivory + sıcak charcoal**, aksan olarak yalnızca **rose-gold/champagne hairline**.
@@ -155,8 +159,9 @@ Tailwind v4 ile renkler doğrudan `@theme` içinde CSS değişkeni olarak tanım
 
 ### 4.1 Eşleştirme kuralları
 
-- **Serif YALNIZCA** H1–H3, koleksiyon adları, gelinlik adları ve pull-quote'larda. Weight 300–500.
+- **Serif YALNIZCA** H1–H3, koleksiyon adları, gelinlik adları ve pull-quote'larda. Weight 300–500. **Başlıklarda AMSALE benzeri yüksek-kontrast serif hissi hedefleniyor** (zarif, kontrastlı display; Cormorant Garamond ile karşılanır).
 - **Sans**: nav, body, buton, form label ve tüm mikro-metin. Weight 300–400.
+- **Editoryal / hikâye bölümleri** (KT "Our Story" split, /atolye, Anasayfa şeridi): gövde metni için de zarif serif kullanılabilir; nav / form / etiketlerde temiz sans kalır.
 - Büyük serif başlıklarda sıkı satır aralığı (`tracking-tight`), küçük sans eyebrow etiketlerinde geniş harf aralığı (`letter-spacing: 0.18em`, uppercase).
 - Lüks sinyalleri: büyük tip ölçeği, serif display'de sıkı leading, küçük uppercase etiketlerde cömert tracking, lowercase/smallcaps nav.
 
@@ -212,13 +217,16 @@ Stack: Next.js 16 (App Router) + shadcn/ui + Tailwind v4 + Framer Motion + Magic
 
 | Section | shadcn/ui bileşenleri |
 |---|---|
-| **Header / desktop nav** | **Navigation Menu** (Koleksiyonlar dropdown → tema adları; Hakkımızda / Randevu / İletişim için düz linkler). **Button** (`ghost`/`link`) "Randevu Al" CTA'sı. Sticky header altında hairline için **Separator**. |
+| **Header / desktop nav** | **Navigation Menu** (Koleksiyonlar dropdown → tema adları; Gelinlikler / Özel Dikim / Atölye / Gerçek Gelinler / İletişim için düz linkler). **Button** (`ghost`/`link`) "Randevu Al" CTA'sı. Sticky header altında hairline için **Separator**. Onaylanan 8'li menü: bkz. [PAGES.md §3](PAGES.md). |
 | **Mobil nav** | **Sheet** (`side="right"`) hamburger drawer. İçinde: iç içe Koleksiyonlar için **Accordion**, gruplar arası **Separator**, CTA için **Button**. (Drawer değil Sheet — Drawer alttan vaul stili, nav menüsü için daha az uygun.) |
-| **Hero** | Ağır bileşen yok — layout + full-bleed portrait `next/image` + serif H1. Opsiyonel tek **Button** (`outline`, `rounded-sm`) "Koleksiyonları Gör". |
+| **Hero** | Ağır bileşen yok — layout + full-bleed portrait `next/image` (tek editoryal foto; carousel/slider/video yok) + serif H1/marka cümlesi. İki **Button**: birincil "Randevu Al" (`default`/charcoal), ikincil "Koleksiyonu Keşfet" (`outline`, `rounded-sm`). Girişte yavaş fade; görsel `priority` (LCP) olduğu için animasyonlanmaz. |
 | **Koleksiyon grid** (`/koleksiyonlar`) | Kenarlıksız **Card** (`rounded-none`) veya düz figure grid; portrait kilidi için **Aspect Ratio** (3:4); "Yeni" etiketi için **Badge**; overlay link için **Button**. Kategori filtresi gerekirse **Tabs** / **Toggle Group**. |
 | **Gelinlik detay — galeri/lightbox** (`/modeller/[dressSlug]`) | Ana görsel + thumbnail şeridi için **Carousel** (embla, portrait, `loop`); tam ekran lightbox kabuğu için **Dialog** (veya özel lib — bkz §6); Detay / Kumaş / Silüet için **Tabs**; bakım SSS için **Accordion**; kare stabilitesi için **Aspect Ratio**. |
 | **Lookbook / Galeri** (Phase 2, `/galeri`) | Yatay hikâye akışı için **Carousel** VEYA `next/image` ile basit masonry. **Separator** + serif alt yazılar. |
-| **Hakkımızda** (`/hakkimizda`) | Typography (prose), **Separator**, atölye/kurucu portresi için **Aspect Ratio**. İnteraktif bileşen gerekmez. |
+| **Atölye** (`/atolye`) | Typography (prose), **Separator**, atölye/kurucu portresi için **Aspect Ratio**. İnteraktif bileşen gerekmez. İmza bölüm = **KT "Our Story" split** (aşağı bkz.). |
+| **KT "Our Story" split bölümü** (imza) | Katherine Tash "OUR STORY" kalıbı: sol tam-boy atölye/kurucu fotoğrafı (**Aspect Ratio**, `rounded-none`) + sağda **AMSALE tarzı yüksek-kontrast serif başlık** + sakin serif gövde metni + bol boşluk. Hem Anasayfa editoryal şeridinde hem `/atolye` sayfasında kullanılır. |
+| **AMSALE tarzı serif başlık** (kalıp) | Bölüm/sayfa başlıkları için zarif, yüksek kontrastlı serif hissi (AMSALE tipografi referansı). Cormorant Garamond ile uygulanır; küçük uppercase sans eyebrow + tek hairline ayraç ile eşlenir. |
+| **Özel Dikim** (`/ozel-dikim`) | Süreç dizisi için basit figure/step grid + **Separator**; ikon için lucide-react; güçlü Randevu **Button** (`default`). Ağır interaktif bileşen yok. |
 | **Randevu formu** (`/randevu`) | **Form** (react-hook-form + zod) sarmalar: **Input** (ad, e-posta, telefon), **Popover** içinde **Calendar** (tarih), **Select** (randevu tipi), **Textarea** (notlar), **Checkbox** (KVKK onayı), **Button** (submit, `default` = charcoal). Yapı için **Field**/**Label**. |
 | **İletişim** (`/iletisim`) | Adres/harita bloğu; **Separator**; WhatsApp CTA **Button**. Konum: İdealtepe Mah. Panaroma Sok. Defne Apt. No:5 D:7, Maltepe / İstanbul. |
 | **Footer** | Düz grid; **Separator**, sosyal ikonlar için lucide-react, WhatsApp/randevu **Button**. |
@@ -328,7 +336,7 @@ const reduce = useReducedMotion();
 4. **Vitrini mağaza gibi ele almak.** SKU, fiyat, "Sepete Ekle", filtre/sıralama chrome'u ("133 sonuç, Sırala") e-ticarete aittir; butik atölyeye değil. İsimli gelinlik + "randevu/iletişim" kullanılır.
 5. **Art-directed olmayan responsive.** Yatay hero'yu mobile sıkıştırmak. Lüks markalar ayrı mobil asset gönderir.
 6. **Çok fazla font / çok fazla renk.** 2'den fazla tip veya yoğun palet olmaz. Bir serif + bir sans; ivory + charcoal.
-7. **Dağınık navigasyon.** Derin e-ticaret mega-menü yerine minimal nav (Koleksiyonlar / Modeller / Hakkımızda / Randevu) ve tek-sayfa scroll kazanır.
+7. **Dağınık navigasyon.** Derin e-ticaret mega-menü yerine minimal nav (Koleksiyonlar / Gelinlikler / Özel Dikim / Atölye / Randevu) ve tek-sayfa scroll kazanır.
 8. **Ucuz hareket** (§7) ve template görünümlü stock görsel.
 9. **Zayıf mobil deneyim.** Mobil-öncelikli akışkan düzen lüks için artık standart; sadece-desktop tasarım tarih kokar.
 
