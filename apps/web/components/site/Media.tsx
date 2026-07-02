@@ -1,5 +1,6 @@
 import type { ImageAsset } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { MediaInner } from "./MediaInner";
 
 type MediaProps = {
   src?: string | null;
@@ -22,9 +23,9 @@ const ratios: Record<NonNullable<MediaProps["ratio"]>, string> = {
 };
 
 /**
- * Görsel gösterir; yoksa/patlarsa pudra placeholder blok kalır.
- * images:{unoptimized:true} olduğu için düz <img> kullanır (host config derdi yok).
- * Placeholder: <img> onError ile gizlenir, arka plan pudra bloğu görünür.
+ * Görsel gösterir; yoksa VEYA URL patlarsa (404/sahte) pudra "CELINE"
+ * placeholder'ına düşer — kırık ikon görünmez. Kap server, görsel client (onError).
+ * images:{unoptimized:true} olduğu için düz <img>.
  */
 export function Media({
   src,
@@ -42,25 +43,12 @@ export function Media({
         className,
       )}
     >
-      {src ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={src}
-          alt={alt ?? ""}
-          loading={priority ? "eager" : "lazy"}
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover"
-          style={{ objectPosition: position }}
-        />
-      ) : (
-        // Pudra placeholder — ince monogram hissi
-        <span
-          aria-hidden
-          className="font-display absolute inset-0 flex items-center justify-center text-2xl tracking-[0.4em] text-rose/50"
-        >
-          CELINE
-        </span>
-      )}
+      <MediaInner
+        src={src ?? undefined}
+        alt={alt ?? ""}
+        priority={priority}
+        position={position}
+      />
     </div>
   );
 }
