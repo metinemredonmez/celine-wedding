@@ -26,6 +26,7 @@ enum AppointmentStatus {
   NEW
   CONTACTED
   DONE
+  CANCELLED
 }
 
 enum AdminRole {

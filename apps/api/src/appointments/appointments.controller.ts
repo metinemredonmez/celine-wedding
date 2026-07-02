@@ -1,12 +1,32 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
+import { UpdateAppointmentDto } from './dto/update-appointment.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('appointments')
 @Controller('appointments')
 export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) {}
+
+  // ─────────────────────────── PUBLIC ───────────────────────────
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -15,10 +35,22 @@ export class AppointmentsController {
     return this.appointmentsService.create(dto);
   }
 
-  // TODO: protect with admin JWT guard (see docs/DATA-MODEL.md). Public for now.
+  // ─────────────────────────── ADMIN ───────────────────────────
+
   @Get()
-  @ApiOkResponse({ description: 'List appointments, newest first. (Will be admin-only.)' })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ description: 'List appointments, newest first (admin).' })
   findAll() {
     return this.appointmentsService.findAll();
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', description: 'Appointment id' })
+  @ApiOkResponse({ description: 'Update appointment status (admin).' })
+  updateStatus(@Param('id') id: string, @Body() dto: UpdateAppointmentDto) {
+    return this.appointmentsService.updateStatus(id, dto.status);
   }
 }

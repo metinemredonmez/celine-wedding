@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { AppointmentStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 
@@ -20,10 +21,22 @@ export class AppointmentsService {
     });
   }
 
-  // TODO: protect with admin JWT guard (see docs/DATA-MODEL.md §3–4).
+  /** Admin: all appointments, newest first. */
   findAll() {
     return this.prisma.appointment.findMany({
       orderBy: { createdAt: 'desc' },
     });
+  }
+
+  /** Admin: move an appointment through its status pipeline (NEW→CONTACTED→DONE / CANCELLED). */
+  async updateStatus(id: string, status: AppointmentStatus) {
+    const existing = await this.prisma.appointment.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+    if (!existing) {
+      throw new NotFoundException(`Appointment "${id}" not found`);
+    }
+    return this.prisma.appointment.update({ where: { id }, data: { status } });
   }
 }
