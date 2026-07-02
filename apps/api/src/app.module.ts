@@ -9,6 +9,7 @@ import { HealthModule } from './health/health.module';
 import { CollectionsModule } from './collections/collections.module';
 import { DressesModule } from './dresses/dresses.module';
 import { AppointmentsModule } from './appointments/appointments.module';
+import { AvailabilityModule } from './availability/availability.module';
 import { SiteSettingsModule } from './site-settings/site-settings.module';
 import { TryOnModule } from './try-on/try-on.module';
 
@@ -24,6 +25,7 @@ import { TryOnModule } from './try-on/try-on.module';
     CollectionsModule,
     DressesModule,
     AppointmentsModule,
+    AvailabilityModule,
     SiteSettingsModule,
     TryOnModule,
   ],

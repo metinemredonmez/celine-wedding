@@ -1,16 +1,18 @@
 import {
   IsEmail,
+  IsInt,
   IsOptional,
   IsString,
   Length,
   Matches,
+  Max,
+  Min,
   IsDateString,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // Turkish mobile number: optional +90 / 0 prefix, leading 5, 9 more digits.
-// Accepts common separators (space, dash, parentheses) which are stripped conceptually
-// by the boutique's front-end; here we validate the canonical, unformatted shape.
 const TR_MOBILE_REGEX = /^(?:\+90|0)?5\d{9}$/;
 
 export class CreateAppointmentDto {
@@ -31,10 +33,23 @@ export class CreateAppointmentDto {
   @IsEmail()
   email?: string;
 
-  @ApiPropertyOptional({ description: 'Preferred appointment date (ISO 8601)' })
+  @ApiPropertyOptional({ description: 'Preferred date (ISO) — free-form, when not booking a calendar slot' })
   @IsOptional()
   @IsDateString()
   preferredDate?: string;
+
+  @ApiPropertyOptional({ description: 'Booked calendar slot start (ISO 8601). Availability is checked server-side.' })
+  @IsOptional()
+  @IsDateString()
+  startsAt?: string;
+
+  @ApiPropertyOptional({ default: 60, description: 'Slot duration in minutes' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(15)
+  @Max(480)
+  durationMin?: number;
 
   @ApiPropertyOptional({ maxLength: 2000 })
   @IsOptional()
@@ -42,10 +57,7 @@ export class CreateAppointmentDto {
   @Length(0, 2000)
   message?: string;
 
-  /**
-   * Honeypot. Real users never fill this; bots often do.
-   * Must be empty — a non-empty value is rejected server-side.
-   */
+  /** Honeypot — must be empty. */
   @ApiPropertyOptional({ description: 'Honeypot — must be empty', default: '' })
   @IsOptional()
   @IsString()

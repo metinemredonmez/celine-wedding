@@ -3,8 +3,7 @@
 // NOTE: docs/DATA-MODEL.md targets the Prisma 7 bleeding-edge `prisma-client`
 // generator with a custom `output`. For this first, basic push we deliberately
 // use the STABLE `prisma-client-js` generator (default output into node_modules,
-// imported from `@prisma/client`) for reliability. The models, enums, relations
-// and indexes below match DATA-MODEL.md verbatim.
+// imported from `@prisma/client`) for reliability.
 
 generator client {
   provider = "prisma-client-js"
@@ -46,7 +45,7 @@ model Collection {
   name        String
   slug        String   @unique
   description String?
-  coverImage  String? // Cloudinary secure_url of cover (optional)
+  coverImage  String?
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -59,12 +58,12 @@ model Collection {
 
 model Dress {
   id          String      @id @default(cuid())
-  name        String // "model" / product name
+  name        String
   slug        String      @unique
   description String?
-  price       Decimal?    @db.Decimal(10, 2) // optional; boutiques often hide price
+  price       Decimal?    @db.Decimal(10, 2)
   fabric      String?
-  details     String? // free-text extra details
+  details     String?
   status      DressStatus @default(DRAFT)
   featured    Boolean     @default(false)
   order       Int         @default(0)
@@ -77,7 +76,6 @@ model Dress {
   images        Image[]
   tryOnRequests TryOnRequest[]
 
-  // Public queries filter by status+featured and sort by order/createdAt.
   @@index([status, featured, order])
   @@index([collectionId, status])
   @@index([slug])
@@ -86,8 +84,8 @@ model Dress {
 
 model Image {
   id        String   @id @default(cuid())
-  url       String // Cloudinary secure_url
-  publicId  String   @unique // Cloudinary public_id — needed to delete/transform
+  url       String
+  publicId  String   @unique
   alt       String?
   width     Int?
   height    Int?
@@ -97,7 +95,7 @@ model Image {
   dressId String
   dress   Dress  @relation(fields: [dressId], references: [id], onDelete: Cascade)
 
-  @@index([dressId, order]) // fetch + order a dress's gallery
+  @@index([dressId, order])
   @@map("images")
 }
 
@@ -106,12 +104,15 @@ model Appointment {
   name          String
   phone         String
   email         String?
-  preferredDate DateTime?
+  preferredDate DateTime? // free-form preferred date (legacy / no calendar)
+  startsAt      DateTime? // booked calendar slot start
+  durationMin   Int?              @default(60)
   message       String?
   status        AppointmentStatus @default(NEW)
   createdAt     DateTime          @default(now())
 
   @@index([status, createdAt])
+  @@index([startsAt])
   @@map("appointments")
 }
 
@@ -120,7 +121,7 @@ model AdminUser {
   email            String    @unique
   passwordHash     String
   role             AdminRole @default(ADMIN)
-  refreshTokenHash String? // hashed current refresh token (rotation)
+  refreshTokenHash String?
   lastLoginAt      DateTime?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
@@ -129,7 +130,7 @@ model AdminUser {
 }
 
 model SiteSettings {
-  id        String   @id @default("singleton") // enforce one row
+  id        String   @id @default("singleton")
   phone     String?
   whatsapp  String?
   instagram String?
@@ -141,15 +142,42 @@ model SiteSettings {
   @@map("site_settings")
 }
 
-// Virtual Try-On (AI) — a bride uploads her photo and previews a gown on herself.
-// Provider-agnostic: the actual AI service is chosen via env (see docs/VIRTUAL-TRYON.md).
+// ─────────────── Calendar / booking availability ───────────────
+
+// Weekly recurring availability (e.g. Mon–Sat 10:00–19:00, 60-min slots).
+model AvailabilityRule {
+  id           String   @id @default(cuid())
+  weekday      Int // 0 = Sunday .. 6 = Saturday
+  startMinutes Int // minutes from midnight, e.g. 600 = 10:00
+  endMinutes   Int // e.g. 1140 = 19:00
+  slotMinutes  Int      @default(60)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([weekday, active])
+  @@map("availability_rules")
+}
+
+// Full-day closures (holidays, kapalı günler) that override the weekly rules.
+model BlockedDate {
+  id        String   @id @default(cuid())
+  date      DateTime
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@index([date])
+  @@map("blocked_dates")
+}
+
+// Virtual Try-On (AI). Provider-agnostic — see docs/VIRTUAL-TRYON.md.
 model TryOnRequest {
   id              String      @id @default(cuid())
-  personImageUrl  String // bride photo (Cloudinary)
-  garmentImageUrl String // gown image sent to the model
-  resultUrl       String? // generated composite
+  personImageUrl  String
+  garmentImageUrl String
+  resultUrl       String?
   status          TryOnStatus @default(PENDING)
-  provider        String? // which provider handled it
+  provider        String?
   error           String?     @db.Text
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
