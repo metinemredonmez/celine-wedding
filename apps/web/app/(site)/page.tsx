@@ -8,6 +8,7 @@ import { DressCard } from "@/components/site/DressCard";
 import { CtaBand } from "@/components/site/CtaBand";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
+import { HERO_IMAGE, STORY_IMAGE, collectionCover } from "@/lib/gallery";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -55,7 +56,11 @@ export default async function HomePage() {
       {/* 1) HERO — tam ekran tek editoryal foto + slogan + 2 buton     */}
       {/* ------------------------------------------------------------ */}
       <section className="relative">
-        <HeroVideo className="min-h-[88vh] w-full">
+        <HeroVideo
+          className="min-h-[88vh] w-full"
+          poster={HERO_IMAGE}
+          posterPosition="center 30%"
+        >
           <Container className="relative flex min-h-[88vh] flex-col items-center justify-end pb-20 text-center sm:pb-28">
             <Reveal className="flex flex-col items-center gap-6">
               <span className="u-label text-cream/85">Seda Dönmez Couture</span>
@@ -150,7 +155,7 @@ export default async function HomePage() {
                   >
                     <div className="overflow-hidden bg-cream">
                       <Media
-                        src={collection.coverImage ?? undefined}
+                        src={collectionCover(collection.coverImage, i)}
                         alt={collection.name}
                         ratio="landscape"
                         className="transition-transform duration-700 ease-out group-hover:scale-[1.03]"
@@ -222,7 +227,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
             <Reveal y={24}>
               <Media
-                src={undefined}
+                src={STORY_IMAGE}
                 alt="Celine Gelinlik atölyesi — el işçiliği"
                 ratio="portrait"
                 position="center"

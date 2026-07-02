@@ -7,28 +7,39 @@ import { cn } from "@/lib/utils";
 type HeroVideoProps = {
   children?: ReactNode;
   className?: string;
+  /** Video yoksa/başarısızsa gösterilecek tam ekran arka plan fotoğrafı. */
+  poster?: string;
+  /** poster object-position (örn. "center 30%"). */
+  posterPosition?: string;
 };
 
 /**
- * Hero arka plan videosu — zarif fallback ile.
+ * Hero arka planı — öncelik sırası:
+ *   1) NEXT_PUBLIC_HERO_VIDEO doluysa video (poster ile),
+ *   2) poster verildiyse tam ekran foto + çok yavaş ken-burns,
+ *   3) hiçbiri yoksa pudra-deep blok + CELINE monogram.
  *
- * Kaynak: NEXT_PUBLIC_HERO_VIDEO doluysa onu, değilse '/hero.mp4' kullanır.
- * Video yüklenemezse (dosya yoksa vb.) veya kaynak yoksa, pudra-deep hero
- * bloğuna düşer: çok yavaş ken-burns (scale 1→1.06 ~18s) + soluk ink gradyanı.
- * Böylece video dosyası olmasa da "kasıtlı" görünen animasyonlu pudra hero olur.
- *
- * İçerik (children: hero metni + butonlar) medyanın ÜSTÜNDE, z-indexli katmanda.
+ * İçerik (children: hero metni + butonlar) medyanın ÜSTÜNDE, z-index'li katmanda.
+ * Foto/video varken okunurluk için güçlü, yoksa hafif bir ink gradyanı bindirilir.
  */
-export function HeroVideo({ children, className }: HeroVideoProps) {
+export function HeroVideo({
+  children,
+  className,
+  poster,
+  posterPosition = "center",
+}: HeroVideoProps) {
   const reduce = useReducedMotion();
 
-  // Boş string'i de "yok" say: env tanımlı ama boşsa /hero.mp4'e düş.
+  // Sadece açıkça tanımlı env videosunu kullan; yoksa poster fotoğrafına düş.
   const envSrc = process.env.NEXT_PUBLIC_HERO_VIDEO;
-  const src = envSrc && envSrc.trim().length > 0 ? envSrc : "/hero.mp4";
+  const videoSrc = envSrc && envSrc.trim().length > 0 ? envSrc.trim() : null;
 
-  // Video patlarsa fallback'e geç.
   const [videoFailed, setVideoFailed] = useState(false);
-  const showVideo = Boolean(src) && !videoFailed;
+  const [posterFailed, setPosterFailed] = useState(false);
+
+  const showVideo = Boolean(videoSrc) && !videoFailed;
+  const showPoster = !showVideo && Boolean(poster) && !posterFailed;
+  const hasMedia = showVideo || showPoster;
 
   return (
     <div className={cn("relative overflow-hidden bg-powder-deep", className)}>
@@ -37,7 +48,8 @@ export function HeroVideo({ children, className }: HeroVideoProps) {
         {showVideo ? (
           <video
             className="absolute inset-0 h-full w-full object-cover"
-            src={src}
+            src={videoSrc ?? undefined}
+            poster={poster}
             muted
             autoPlay
             loop
@@ -45,8 +57,34 @@ export function HeroVideo({ children, className }: HeroVideoProps) {
             preload="metadata"
             onError={() => setVideoFailed(true)}
           />
+        ) : showPoster ? (
+          // Tam ekran foto — çok yavaş ken-burns (reduced-motion → statik).
+          <motion.div
+            className="absolute inset-0"
+            initial={reduce ? undefined : { scale: 1.04 }}
+            animate={reduce ? undefined : { scale: 1.12 }}
+            transition={
+              reduce
+                ? undefined
+                : {
+                    duration: 20,
+                    ease: "easeInOut",
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                  }
+            }
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={poster}
+              alt=""
+              onError={() => setPosterFailed(true)}
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: posterPosition }}
+            />
+          </motion.div>
         ) : (
-          // Fallback: yavaş ken-burns pudra-deep blok (reduced-motion → statik).
+          // Fallback: yavaş ken-burns pudra-deep blok (foto da yoksa).
           <motion.div
             className="absolute inset-0 bg-powder-deep"
             initial={reduce ? undefined : { scale: 1 }}
@@ -62,7 +100,6 @@ export function HeroVideo({ children, className }: HeroVideoProps) {
                   }
             }
           >
-            {/* İnce monogram hissi — pudra bloğa zarif bir merkez verir */}
             <span className="font-display absolute inset-0 flex items-center justify-center text-2xl tracking-[0.4em] text-rose/40">
               CELINE
             </span>
@@ -70,10 +107,15 @@ export function HeroVideo({ children, className }: HeroVideoProps) {
         )}
       </div>
 
-      {/* --- Okunurluk için çok hafif, havadar ink katmanı --- */}
+      {/* --- Okunurluk için ink gradyanı: medya varken güçlü, yoksa hafif --- */}
       <div
         aria-hidden
-        className="absolute inset-0 bg-gradient-to-t from-ink/35 via-ink/5 to-transparent"
+        className={cn(
+          "absolute inset-0",
+          hasMedia
+            ? "bg-gradient-to-t from-ink/75 via-ink/30 to-ink/15"
+            : "bg-gradient-to-t from-ink/35 via-ink/5 to-transparent",
+        )}
       />
 
       {/* --- İçerik katmanı (medyanın üstünde) --- */}
