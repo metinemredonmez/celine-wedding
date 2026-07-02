@@ -137,6 +137,8 @@ model SiteSettings {
   address   String?
   mapUrl    String?
   about     String?  @db.Text
+  heroImage String? // ana ekran arka plan fotoğrafı (URL)
+  heroVideo String? // ana ekran arka plan videosu (URL) — foto'nun önüne geçer
   updatedAt DateTime @updatedAt
 
   @@map("site_settings")

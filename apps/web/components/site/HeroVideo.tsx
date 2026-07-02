@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 type HeroVideoProps = {
   children?: ReactNode;
   className?: string;
+  /** Arka plan videosu (URL). Verilmezse env → /hero.mp4 kullanılır. */
+  video?: string;
   /** Video yoksa/başarısızsa gösterilecek tam ekran arka plan fotoğrafı. */
   poster?: string;
   /** poster object-position (örn. "center 30%"). */
@@ -25,14 +27,20 @@ type HeroVideoProps = {
 export function HeroVideo({
   children,
   className,
+  video,
   poster,
   posterPosition = "center",
 }: HeroVideoProps) {
   const reduce = useReducedMotion();
 
-  // Sadece açıkça tanımlı env videosunu kullan; yoksa poster fotoğrafına düş.
+  // Öncelik: açık prop (admin) → env → paketteki /hero.mp4 (ipek kumaş loop'u).
   const envSrc = process.env.NEXT_PUBLIC_HERO_VIDEO;
-  const videoSrc = envSrc && envSrc.trim().length > 0 ? envSrc.trim() : null;
+  const videoSrc =
+    video && video.trim().length > 0
+      ? video.trim()
+      : envSrc && envSrc.trim().length > 0
+        ? envSrc.trim()
+        : "/hero.mp4";
 
   const [videoFailed, setVideoFailed] = useState(false);
   const [posterFailed, setPosterFailed] = useState(false);

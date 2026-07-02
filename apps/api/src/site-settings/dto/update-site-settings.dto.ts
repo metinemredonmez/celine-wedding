@@ -31,4 +31,16 @@ export class UpdateSiteSettingsDto {
   @IsOptional()
   @IsString()
   about?: string;
+
+  @ApiPropertyOptional({ description: 'Ana ekran arka plan fotoğrafı (URL)' })
+  @IsOptional()
+  @IsString()
+  heroImage?: string;
+
+  @ApiPropertyOptional({
+    description: 'Ana ekran arka plan videosu (URL) — foto yerine oynatılır',
+  })
+  @IsOptional()
+  @IsString()
+  heroVideo?: string;
 }

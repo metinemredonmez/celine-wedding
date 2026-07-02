@@ -20,6 +20,8 @@ type FormState = {
   address: string;
   mapUrl: string;
   about: string;
+  heroImage: string;
+  heroVideo: string;
 };
 
 const FORM_KEYS = [
@@ -29,6 +31,8 @@ const FORM_KEYS = [
   "address",
   "mapUrl",
   "about",
+  "heroImage",
+  "heroVideo",
 ] as const;
 
 function fromSettings(s: SiteSettings): FormState {
@@ -39,6 +43,8 @@ function fromSettings(s: SiteSettings): FormState {
     address: s.address ?? "",
     mapUrl: s.mapUrl ?? "",
     about: s.about ?? "",
+    heroImage: s.heroImage ?? "",
+    heroVideo: s.heroVideo ?? "",
   };
 }
 
@@ -51,6 +57,8 @@ function toInput(form: FormState): SiteSettingsInput {
     address: form.address.trim(),
     mapUrl: form.mapUrl.trim(),
     about: form.about.trim(),
+    heroImage: form.heroImage.trim(),
+    heroVideo: form.heroVideo.trim(),
   };
 }
 
@@ -238,6 +246,46 @@ export default function AdminSettingsPage() {
                   value={form.about}
                   onChange={(e) => set("about", e.target.value)}
                   placeholder="Celine Gelinlik, İstanbul Maltepe'de..."
+                />
+              </Field>
+            </div>
+
+            {/* ── Ana ekran (hero) medyası ── */}
+            <div className="mt-8 space-y-5 border-t border-ink/10 pt-6">
+              <div>
+                <h2 className="font-display text-lg text-ink">Ana Ekran (Hero)</h2>
+                <p className="mt-1 text-xs text-muted">
+                  Ana sayfanın en üstündeki tam ekran arka planı. Video verilirse
+                  oynatılır; yoksa foto gösterilir. İkisi de boşsa paketteki ipek
+                  kumaş videosu kullanılır.
+                </p>
+              </div>
+
+              <Field
+                label="Hero video URL"
+                htmlFor="settings-hero-video"
+                hint="Doğrudan .mp4 bağlantısı (ör. Cloudinary). Foto'nun önüne geçer. Boşsa varsayılan video oynar."
+              >
+                <Input
+                  id="settings-hero-video"
+                  type="url"
+                  value={form.heroVideo}
+                  onChange={(e) => set("heroVideo", e.target.value)}
+                  placeholder="https://.../hero.mp4"
+                />
+              </Field>
+
+              <Field
+                label="Hero foto URL"
+                htmlFor="settings-hero-image"
+                hint="Video yoksa/oynamazsa gösterilecek arka plan fotoğrafı."
+              >
+                <Input
+                  id="settings-hero-image"
+                  type="url"
+                  value={form.heroImage}
+                  onChange={(e) => set("heroImage", e.target.value)}
+                  placeholder="https://.../hero.jpg"
                 />
               </Field>
             </div>

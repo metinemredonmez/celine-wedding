@@ -171,6 +171,8 @@ export interface SiteSettings {
   address: string | null;
   mapUrl: string | null;
   about: string | null;
+  heroImage: string | null;
+  heroVideo: string | null;
   updatedAt?: string;
 }
 
@@ -182,6 +184,8 @@ export interface SiteSettingsInput {
   address?: string;
   mapUrl?: string;
   about?: string;
+  heroImage?: string;
+  heroVideo?: string;
 }
 
 // ─────────────────────────── Medya ───────────────────────────

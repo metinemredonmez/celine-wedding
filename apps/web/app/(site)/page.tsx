@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getCollections, getDresses } from "@/lib/api";
+import { getCollections, getDresses, getSiteSettings } from "@/lib/api";
 import { Container } from "@/components/site/Container";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Media } from "@/components/site/Media";
@@ -42,13 +42,18 @@ const PROCESS_STEPS = [
 
 export default async function HomePage() {
   // Veriyi paralel çek; hata olursa lib/api zarifçe boş döner.
-  const [featuredPage, collections] = await Promise.all([
+  const [featuredPage, collections, settings] = await Promise.all([
     getDresses({ featured: true, limit: 6 }),
     getCollections(),
+    getSiteSettings(),
   ]);
 
   const featured = featuredPage.data;
   const teaserCollections = collections.slice(0, 3);
+
+  // Hero medyası: admin ayarları → yoksa paketteki varsayılan video + foto.
+  const heroVideo = settings?.heroVideo?.trim() || undefined;
+  const heroPoster = settings?.heroImage?.trim() || HERO_IMAGE;
 
   return (
     <>
@@ -58,7 +63,8 @@ export default async function HomePage() {
       <section className="relative">
         <HeroVideo
           className="min-h-[88vh] w-full"
-          poster={HERO_IMAGE}
+          video={heroVideo}
+          poster={heroPoster}
           posterPosition="center 30%"
         >
           <Container className="relative flex min-h-[88vh] flex-col items-center justify-end pb-20 text-center sm:pb-28">
