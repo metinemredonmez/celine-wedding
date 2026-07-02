@@ -3,6 +3,7 @@ import { getCollections, getDresses } from "@/lib/api";
 import { Container } from "@/components/site/Container";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Media } from "@/components/site/Media";
+import { HeroVideo } from "@/components/site/HeroVideo";
 import { DressCard } from "@/components/site/DressCard";
 import { CtaBand } from "@/components/site/CtaBand";
 import { ButtonLink } from "@/components/ui/Button";
@@ -54,20 +55,7 @@ export default async function HomePage() {
       {/* 1) HERO — tam ekran tek editoryal foto + slogan + 2 buton     */}
       {/* ------------------------------------------------------------ */}
       <section className="relative">
-        <div className="relative min-h-[88vh] w-full overflow-hidden bg-powder-deep">
-          <Media
-            src={undefined}
-            alt="Celine Gelinlik — ölçüye özel couture gelinlik"
-            ratio="none"
-            priority
-            position="center 30%"
-            className="absolute inset-0 h-full w-full"
-          />
-          {/* Metnin okunurluğu için ince, sıcak katman */}
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-ink/35 via-ink/5 to-transparent"
-          />
+        <HeroVideo className="min-h-[88vh] w-full">
           <Container className="relative flex min-h-[88vh] flex-col items-center justify-end pb-20 text-center sm:pb-28">
             <Reveal className="flex flex-col items-center gap-6">
               <span className="u-label text-cream/85">Seda Dönmez Couture</span>
@@ -93,7 +81,7 @@ export default async function HomePage() {
               </div>
             </Reveal>
           </Container>
-        </div>
+        </HeroVideo>
       </section>
 
       {/* ------------------------------------------------------------ */}

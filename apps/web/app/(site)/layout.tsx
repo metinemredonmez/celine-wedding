@@ -1,5 +1,6 @@
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { OpeningIntro } from "@/components/site/OpeningIntro";
 
 /**
  * Public site kabuğu — Header + içerik + Footer.
@@ -11,6 +12,7 @@ export default function SiteLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
+      <OpeningIntro />
       <Header />
       <main>{children}</main>
       <Footer />
