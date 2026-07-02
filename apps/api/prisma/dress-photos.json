@@ -1,0 +1,96 @@
+[
+  {
+    "slug": "model-1",
+    "name": "Model 1",
+    "images": [
+      "/gelinlikler/m01-1.jpg",
+      "/gelinlikler/m01-2.jpg",
+      "/gelinlikler/m01-3.jpg",
+      "/gelinlikler/m01-4.jpg",
+      "/gelinlikler/m01-5.jpg",
+      "/gelinlikler/m01-6.jpg",
+      "/gelinlikler/m01-7.jpg",
+      "/gelinlikler/m01-8.jpg",
+      "/gelinlikler/m01-9.jpg"
+    ]
+  },
+  {
+    "slug": "model-2",
+    "name": "Model 2",
+    "images": [
+      "/gelinlikler/m02-1.jpg",
+      "/gelinlikler/m02-2.jpg"
+    ]
+  },
+  {
+    "slug": "model-3",
+    "name": "Model 3",
+    "images": [
+      "/gelinlikler/m03-1.jpg",
+      "/gelinlikler/m03-2.jpg",
+      "/gelinlikler/m03-3.jpg"
+    ]
+  },
+  {
+    "slug": "model-4",
+    "name": "Model 4",
+    "images": [
+      "/gelinlikler/m04-1.jpg",
+      "/gelinlikler/m04-2.jpg",
+      "/gelinlikler/m04-3.jpg"
+    ]
+  },
+  {
+    "slug": "model-5",
+    "name": "Model 5",
+    "images": [
+      "/gelinlikler/m05-1.jpg",
+      "/gelinlikler/m05-2.jpg"
+    ]
+  },
+  {
+    "slug": "model-6",
+    "name": "Model 6",
+    "images": [
+      "/gelinlikler/m06-1.jpg",
+      "/gelinlikler/m06-2.jpg",
+      "/gelinlikler/m06-3.jpg"
+    ]
+  },
+  {
+    "slug": "model-7",
+    "name": "Model 7",
+    "images": [
+      "/gelinlikler/m07-1.jpg",
+      "/gelinlikler/m07-2.jpg",
+      "/gelinlikler/m07-3.jpg"
+    ]
+  },
+  {
+    "slug": "model-8",
+    "name": "Model 8",
+    "images": [
+      "/gelinlikler/m08-1.jpg",
+      "/gelinlikler/m08-2.jpg",
+      "/gelinlikler/m08-3.jpg",
+      "/gelinlikler/m08-4.jpg",
+      "/gelinlikler/m08-5.jpg",
+      "/gelinlikler/m08-6.jpg"
+    ]
+  },
+  {
+    "slug": "model-9",
+    "name": "Model 9",
+    "images": [
+      "/gelinlikler/m09-1.jpg"
+    ]
+  },
+  {
+    "slug": "model-10",
+    "name": "Model 10",
+    "images": [
+      "/gelinlikler/m10-1.jpg",
+      "/gelinlikler/m10-2.jpg"
+    ]
+  }
+]
