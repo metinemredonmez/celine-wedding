@@ -1,0 +1,127 @@
+import Link from "next/link";
+import { getSiteSettings } from "@/lib/api";
+import { NAV_ITEMS } from "@/lib/nav";
+import { instagramLink, telLink, waLink } from "@/lib/utils";
+import { Container } from "./Container";
+
+/**
+ * ML footer — çok kolonlu: marka+slogan / Menü / İletişim / Randevu+WhatsApp.
+ * Server component; SiteSettings'ten iletişim bilgilerini çeker.
+ */
+export async function Footer() {
+  const s = await getSiteSettings();
+  const wa = s.whatsapp ?? process.env.NEXT_PUBLIC_WHATSAPP_PHONE ?? "";
+  const ig = instagramLink(s.instagram ?? process.env.NEXT_PUBLIC_INSTAGRAM);
+  const tel = telLink(s.phone);
+  const year = new Date().getFullYear();
+
+  return (
+    <footer className="border-t border-rose-soft/50 bg-cream">
+      <Container className="py-16 sm:py-20">
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Marka + slogan */}
+          <div className="flex flex-col gap-4 lg:col-span-1">
+            <span className="u-wordmark text-lg text-ink">CELINE</span>
+            <p className="max-w-xs text-sm leading-relaxed text-muted">
+              Seda Dönmez Couture — kişiye özel, ölçüye özel gelinlik tasarımı.
+              Her gelin için tek ve eşsiz.
+            </p>
+            {s.address ? (
+              <p className="text-sm leading-relaxed text-faint">{s.address}</p>
+            ) : (
+              <p className="text-sm leading-relaxed text-faint">
+                Maltepe, İstanbul
+              </p>
+            )}
+          </div>
+
+          {/* Menü */}
+          <nav className="flex flex-col gap-3">
+            <span className="u-label text-faint">Menü</span>
+            {NAV_ITEMS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-sm text-muted transition-colors hover:text-ink"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* İletişim */}
+          <div className="flex flex-col gap-3">
+            <span className="u-label text-faint">İletişim</span>
+            {tel ? (
+              <a
+                href={tel}
+                className="text-sm text-muted transition-colors hover:text-ink"
+              >
+                {s.phone}
+              </a>
+            ) : null}
+            {ig ? (
+              <a
+                href={ig}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-muted transition-colors hover:text-ink"
+              >
+                Instagram
+              </a>
+            ) : null}
+            {s.mapUrl ? (
+              <a
+                href={s.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-muted transition-colors hover:text-ink"
+              >
+                Haritada gör
+              </a>
+            ) : null}
+          </div>
+
+          {/* Randevu + WhatsApp */}
+          <div className="flex flex-col gap-3">
+            <span className="u-label text-faint">Randevu</span>
+            <Link
+              href="/randevu"
+              className="text-sm text-muted transition-colors hover:text-ink"
+            >
+              Randevu oluştur
+            </Link>
+            {wa ? (
+              <a
+                href={waLink(
+                  wa,
+                  "Merhaba, Celine Gelinlik için bilgi almak istiyorum.",
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-muted transition-colors hover:text-ink"
+              >
+                WhatsApp
+              </a>
+            ) : null}
+          </div>
+        </div>
+
+        {/* Telif + KVKK */}
+        <div className="mt-14 flex flex-col items-start justify-between gap-3 border-t border-rose-soft/40 pt-6 sm:flex-row sm:items-center">
+          <p className="u-label !text-[0.6rem] text-faint">
+            © {year} Celine Gelinlik · Tüm hakları saklıdır
+          </p>
+          <Link
+            href="/kvkk"
+            className="u-label !text-[0.6rem] text-faint transition-colors hover:text-ink"
+          >
+            KVKK Aydınlatma Metni
+          </Link>
+        </div>
+      </Container>
+    </footer>
+  );
+}
+
+export default Footer;

@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/*  Celine Gelinlik — tasarım token'ları (Tailwind v4 CSS-first @theme) */
+/*  Palet: pudra taban + beyaz kartlar + sıcak antrasit metin.          */
+/*  Değişkenler doğrudan util üretir: bg-powder, text-ink, border-rose  */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* Renkler */
+  --color-powder: #f6ecea; /* taban (sayfa zemini) */
+  --color-powder-deep: #e7d6d3; /* hero foto bloğu / derin pudra */
+  --color-cream: #ffffff; /* kartlar, foto blokları, "Hikâyemiz" bandı */
+
+  --color-ink: #2a2622; /* ana metin — sıcak antrasit */
+  --color-muted: #6b6259; /* ikincil metin */
+  --color-faint: #9a8880; /* en soluk metin / etiket */
+
+  --color-rose: #c9a9a6; /* dusty rose aksan (hairline/link) */
+  --color-rose-soft: #d8beb9; /* daha açık dusty rose */
+
+  /* Tipografi — next/font CSS değişkenlerine köprü */
+  --font-display: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Küçük radius, gölge yok estetiği */
+  --radius-tiny: 2px;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Base                                                               */
+/* ------------------------------------------------------------------ */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-powder);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: var(--color-rose-soft);
+  color: var(--color-ink);
+}
+
+/* Odak erişilebilirliği */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-rose);
+  outline-offset: 2px;
+  border-radius: var(--radius-tiny);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Yardımcı sınıflar (imza kalıplar)                                  */
+/* ------------------------------------------------------------------ */
+
+/* Serif başlık ailesi — büyük, zarif, yüksek-kontrast his */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: 1.12;
+}
+
+/* Küçük uppercase etiket — geniş letter-spacing.
+   Renk BİLİNÇLİ olarak burada verilmez: Tailwind text-* utility'leri
+   (text-rose / text-ink / text-faint) rengi belirlesin. Renk verilmezse
+   text-inherit'e düşer, bu yüzden varsayılan bir ton util ile eklenmeli. */
+.u-label {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+/* CELINE wordmark — çok geniş letter-spacing */
+.u-wordmark {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.42em;
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* İnce dusty-rose hairline */
+.u-hairline {
+  border-color: var(--color-rose-soft);
+}
+
+/* Reduced motion — Framer Motion + CSS animasyonlarını yumuşat */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

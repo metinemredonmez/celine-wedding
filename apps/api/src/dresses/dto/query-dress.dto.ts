@@ -31,9 +31,13 @@ export class QueryDressDto {
   @IsString()
   collection?: string;
 
-  @ApiPropertyOptional({ description: 'Filter by featured flag' })
+  @ApiPropertyOptional({ description: 'Filter by featured flag (true/false)' })
   @IsOptional()
-  @Transform(({ value }) => value === 'true' || value === true)
+  @Transform(({ value }) => {
+    if (value === 'true' || value === true) return true;
+    if (value === 'false' || value === false) return false;
+    return undefined; // geçersiz değer → filtre uygulanmaz
+  })
   @IsBoolean()
   featured?: boolean;
 

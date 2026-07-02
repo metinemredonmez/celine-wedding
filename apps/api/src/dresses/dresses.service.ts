@@ -208,7 +208,8 @@ export class DressesService {
       data: {
         ...rest,
         slug: slug ? slugify(slug) : slugify(dto.name),
-        ...(price !== undefined && { price: new Prisma.Decimal(price) }),
+        // null → alanı hiç gönderme (Decimal(null) 500 atar)
+        ...(price != null && { price: new Prisma.Decimal(price) }),
       },
       select: ADMIN_DRESS_SELECT,
     });
@@ -226,13 +227,18 @@ export class DressesService {
       throw new NotFoundException(`Dress "${id}" not found`);
     }
 
-    const { slug, price, ...rest } = dto;
+    const { slug, price, name, ...rest } = dto;
     const dress = await this.prisma.dress.update({
       where: { id },
       data: {
         ...rest,
-        ...(slug !== undefined && { slug: slugify(slug) }),
-        ...(price !== undefined && { price: new Prisma.Decimal(price) }),
+        // name/slug null gönderilirse yok say (zorunlu alanlar temizlenemez);
+        // price: null → fiyatı TEMİZLE, sayı → güncelle, undefined → dokunma.
+        ...(name != null && { name }),
+        ...(slug != null && { slug: slugify(slug) }),
+        ...(price !== undefined && {
+          price: price === null ? null : new Prisma.Decimal(price),
+        }),
       },
       select: ADMIN_DRESS_SELECT,
     });
@@ -269,13 +275,21 @@ export class DressesService {
 
   /** Bulk reorder dresses by an ordered id list (index → order). */
   async reorder(ids: string[]) {
+    // Bayat/silinmiş id'ler tüm transaction'ı 500 ile düşürmesin: önce filtrele.
+    const existing = await this.prisma.dress.findMany({
+      where: { id: { in: ids } },
+      select: { id: true },
+    });
+    const valid = new Set(existing.map((d) => d.id));
+    const survivors = ids.filter((id) => valid.has(id));
+
     await this.prisma.$transaction(
-      ids.map((id, index) =>
+      survivors.map((id, index) =>
         this.prisma.dress.update({ where: { id }, data: { order: index } }),
       ),
     );
     await this.revalidate.revalidate(['dresses']);
-    return { reordered: ids.length };
+    return { reordered: survivors.length, skipped: ids.length - survivors.length };
   }
 
   // ─────────────────────────── IMAGES ───────────────────────────
@@ -323,8 +337,15 @@ export class DressesService {
       throw new NotFoundException(`Dress "${dressId}" not found`);
     }
 
+    const existingImages = await this.prisma.image.findMany({
+      where: { id: { in: ids }, dressId },
+      select: { id: true },
+    });
+    const valid = new Set(existingImages.map((i) => i.id));
+    const survivors = ids.filter((id) => valid.has(id));
+
     await this.prisma.$transaction(
-      ids.map((id, index) =>
+      survivors.map((id, index) =>
         this.prisma.image.update({
           where: { id, dressId },
           data: { order: index },
@@ -333,7 +354,7 @@ export class DressesService {
     );
 
     await this.revalidate.revalidate(['dresses', `dress:${dress.slug}`]);
-    return { reordered: ids.length };
+    return { reordered: survivors.length, skipped: ids.length - survivors.length };
   }
 
   async removeImage(dressId: string, imageId: string) {

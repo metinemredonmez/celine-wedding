@@ -13,6 +13,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RefreshDto } from './dto/refresh.dto';
@@ -26,6 +27,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @Throttle({ default: { ttl: 900_000, limit: 5 } }) // brute-force koruması: IP başına 15 dk'da 5 deneme
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Returns an access + refresh token pair.' })
   @ApiUnauthorizedResponse({ description: 'Invalid credentials.' })
@@ -34,6 +36,7 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @Throttle({ default: { ttl: 900_000, limit: 30 } })
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Rotates the refresh token, returns a new pair.' })
   refresh(@Body() dto: RefreshDto) {

@@ -105,10 +105,15 @@ export class CollectionsService {
       throw new NotFoundException(`Collection "${id}" not found`);
     }
 
-    const { slug, ...rest } = dto;
+    const { slug, name, ...rest } = dto;
     const collection = await this.prisma.collection.update({
       where: { id },
-      data: { ...rest, ...(slug !== undefined && { slug: slugify(slug) }) },
+      // name/slug null → yok say (zorunlu alanlar temizlenemez, 500 yerine no-op)
+      data: {
+        ...rest,
+        ...(name != null && { name }),
+        ...(slug != null && { slug: slugify(slug) }),
+      },
     });
 
     await this.revalidate.revalidate(['collections', `collection:${collection.slug}`]);

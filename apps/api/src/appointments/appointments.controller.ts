@@ -18,6 +18,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
@@ -31,9 +32,11 @@ export class AppointmentsController {
   // ─────────────────────────── PUBLIC ───────────────────────────
 
   @Post()
+  @Throttle({ default: { ttl: 3_600_000, limit: 10 } }) // spam/mail-relay koruması: IP başına saatte 10
   @HttpCode(HttpStatus.CREATED)
   @ApiCreatedResponse({
-    description: 'Create an appointment. If `startsAt` is sent, the slot is checked for conflicts.',
+    description:
+      'Create an appointment. If `startsAt` is sent, it must be an available calendar slot (rules + blocked days + conflicts are enforced server-side).',
   })
   create(@Body() dto: CreateAppointmentDto) {
     return this.appointmentsService.create(dto);

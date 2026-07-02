@@ -10,7 +10,7 @@ import {
   IsDateString,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // Turkish mobile number: optional +90 / 0 prefix, leading 5, 9 more digits.
 const TR_MOBILE_REGEX = /^(?:\+90|0)?5\d{9}$/;
@@ -43,7 +43,11 @@ export class CreateAppointmentDto {
   @IsDateString()
   startsAt?: string;
 
-  @ApiPropertyOptional({ default: 60, description: 'Slot duration in minutes' })
+  @ApiPropertyOptional({
+    default: 60,
+    description:
+      'DEPRECATED — sunucu, süreyi seçilen slotun uzunluğundan türetir; gönderilen değer yok sayılır.',
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -57,8 +61,8 @@ export class CreateAppointmentDto {
   @Length(0, 2000)
   message?: string;
 
-  /** Honeypot — must be empty. */
-  @ApiPropertyOptional({ description: 'Honeypot — must be empty', default: '' })
+  /** Honeypot — must be empty. Swagger'da gizli (spam botlarına ipucu vermeyelim). */
+  @ApiHideProperty()
   @IsOptional()
   @IsString()
   @Length(0, 0, { message: 'website must be empty' })

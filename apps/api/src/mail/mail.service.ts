@@ -37,6 +37,10 @@ export class MailService {
         user: this.config.get<string>('SMTP_USER'),
         pass: this.config.get<string>('SMTP_PASS'),
       },
+      // Ulaşılamayan SMTP, çağıranı dakikalarca asmasın.
+      connectionTimeout: 8_000,
+      greetingTimeout: 8_000,
+      socketTimeout: 15_000,
     });
     return this.transporter;
   }

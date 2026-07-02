@@ -15,8 +15,11 @@ echo "==> pnpm install"
 corepack enable pnpm >/dev/null 2>&1 || true
 pnpm install
 
-echo "==> API (prisma generate + build + restart)"
+echo "==> API (prisma generate + db push + build + restart)"
 pnpm --filter api exec prisma generate
+# Şema değişikliklerini prod DB'ye uygula (veri kaybı riski olan değişikliklerde
+# prisma onay ister; öyle bir durumda deploy'u durdurur, önce yedek alın).
+pnpm --filter api exec prisma db push
 pnpm --filter api build
 pm2 restart celine-api --update-env 2>/dev/null || ( cd apps/api && pm2 start dist/main.js --name celine-api )
 
@@ -28,6 +31,12 @@ fi
 
 pm2 save
 echo "==> health:"
-curl -s http://127.0.0.1:4000/health || true
-echo
-echo "==> DONE ✅"
+sleep 2
+if curl -sf http://127.0.0.1:4000/health; then
+  echo
+  echo "==> DONE ✅"
+else
+  echo
+  echo "==> HEALTH CHECK FAILED ❌ — pm2 logs celine-api ile bakın"
+  exit 1
+fi

@@ -1,0 +1,134 @@
+import type { Metadata } from "next";
+import { Container } from "@/components/site/Container";
+import { SectionHeading } from "@/components/site/SectionHeading";
+import { Media } from "@/components/site/Media";
+import { CtaBand } from "@/components/site/CtaBand";
+import { Reveal } from "@/components/motion/Reveal";
+
+export const metadata: Metadata = {
+  title: "Gerçek Gelinler",
+  description:
+    "Celine Gelinlik'in gerçek gelinleri ve düğün günü hikâyeleri. Yakında paylaşacağımız kareler ve anılarla dolu bir galeri.",
+};
+
+type BrideStory = {
+  name: string;
+  detail: string;
+  quote: string;
+  /** portre / kare karışımı için oran */
+  ratio: "portrait" | "square" | "landscape";
+};
+
+// Şimdilik statik/placeholder — görsel yokta Media pudra bloğu gösterir.
+const STORIES: BrideStory[] = [
+  {
+    name: "Elif & Kaan",
+    detail: "İstanbul · İpek ve dantel",
+    quote:
+      "İlk provada aynada kendimi gördüğümde ağladım. Hayal ettiğimden çok daha fazlasıydı.",
+    ratio: "portrait",
+  },
+  {
+    name: "Zeynep & Arda",
+    detail: "Bodrum · Kır düğünü",
+    quote:
+      "Her detayı benimle birlikte düşündüler. Elbisem gerçekten bana aitmiş gibi hissettim.",
+    ratio: "square",
+  },
+  {
+    name: "Merve & Can",
+    detail: "İzmir · Sade zarafet",
+    quote:
+      "Sadelik istedim ama sıradan olmasın dedim. Tam da anlattığım o dengeyi yakaladılar.",
+    ratio: "portrait",
+  },
+  {
+    name: "Deniz & Emir",
+    detail: "İstanbul · El işi işleme",
+    quote:
+      "Boncukların tek tek elle işlendiğini bilmek elbiseme bambaşka bir anlam kattı.",
+    ratio: "square",
+  },
+  {
+    name: "Selin & Ege",
+    detail: "Ankara · Uzun kuyruk",
+    quote:
+      "Şehir dışındaydım, çoğu görüşmeyi video ile yaptık. Yine de her an yanımdaydılar.",
+    ratio: "portrait",
+  },
+  {
+    name: "Ayşe & Mert",
+    detail: "İstanbul · Klasik siluet",
+    quote:
+      "Annemin de beğeneceği, zamansız bir gelinlik istedim. İkimizi de mutlu etti.",
+    ratio: "square",
+  },
+];
+
+export default function GercekGelinlerPage() {
+  return (
+    <>
+      {/* Giriş */}
+      <section className="bg-powder pt-20 pb-12 sm:pt-28 sm:pb-16">
+        <Container>
+          <Reveal>
+            <SectionHeading
+              size="lg"
+              eyebrow="Gerçek Gelinler"
+              title="Kendi hikâyesini yaşayan gelinler"
+              subtitle="Celine gelinliklerini giyen gelinlerimizin düğün günü kareleri ve kelimeleri. Bu galeriyi zamanla, gerçek gelinlerimizin anılarıyla dolduruyoruz."
+            />
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* Editoryal grid */}
+      <section className="bg-powder pb-20 sm:pb-28">
+        <Container>
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {STORIES.map((b, i) => (
+              <Reveal
+                key={b.name}
+                delay={(i % 3) * 0.08}
+                className="flex flex-col gap-5"
+              >
+                <figure className="flex flex-col gap-5">
+                  <Media ratio={b.ratio} position="center" />
+                  <figcaption className="flex flex-col gap-3">
+                    <p className="font-display text-lg leading-snug text-ink">
+                      &ldquo;{b.quote}&rdquo;
+                    </p>
+                    <div className="flex flex-col gap-1">
+                      <span className="u-label text-rose">{b.name}</span>
+                      <span className="text-sm text-faint">{b.detail}</span>
+                    </div>
+                  </figcaption>
+                </figure>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Yakında notu */}
+          <Reveal delay={0.1}>
+            <div className="mt-16 border-t border-rose-soft pt-10 text-center">
+              <p className="u-label text-faint">Yakında</p>
+              <p className="mx-auto mt-4 max-w-xl text-muted leading-relaxed">
+                Gelinlerimizin gerçek düğün fotoğraflarını ve hikâyelerini
+                paylaşmak için sabırsızlanıyoruz. Yakında bu sayfa, size ilham
+                verecek gerçek anılarla dolacak.
+              </p>
+            </div>
+          </Reveal>
+        </Container>
+      </section>
+
+      <CtaBand
+        tone="cream"
+        eyebrow="Sıradaki siz olun"
+        title="Kendi hikâyenizi yazın"
+        text="Bir sonraki Celine gelini siz olabilirsiniz. Size özel gelinlik yolculuğunuza başlamak için atölyemizden randevu alın."
+        whatsappText="Merhaba, Celine Gelinlik için randevu almak istiyorum."
+      />
+    </>
+  );
+}

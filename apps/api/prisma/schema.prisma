@@ -178,6 +178,7 @@ model TryOnRequest {
   resultUrl       String?
   status          TryOnStatus @default(PENDING)
   provider        String?
+  jobId           String? // async provider job id (poll için)
   error           String?     @db.Text
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt

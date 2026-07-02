@@ -22,13 +22,18 @@ async function seedAdmin(): Promise<void> {
 
   const passwordHash = await argon2.hash(password, ARGON2_OPTS);
 
+  const existing = await prisma.adminUser.findUnique({ where: { email } });
   await prisma.adminUser.upsert({
     where: { email },
     // Do not clobber a rotated password on re-seed.
     update: {},
     create: { email, passwordHash, role: 'ADMIN' },
   });
-  console.log(`[seed] admin user ready: ${email}`);
+  console.log(
+    existing
+      ? `[seed] admin user exists: ${email} — mevcut şifre KORUNDU (env'deki ADMIN_PASSWORD uygulanmadı).`
+      : `[seed] admin user created: ${email}`,
+  );
 }
 
 async function seedSettings(): Promise<void> {
@@ -201,7 +206,12 @@ async function seedCatalog(): Promise<void> {
 async function main(): Promise<void> {
   await seedAdmin();
   await seedSettings();
-  await seedCatalog();
+  // Demo katalog (sahte Cloudinary URL'leri) prod'a girmesin; SEED_DEMO=1 ile zorlanabilir.
+  if (process.env.NODE_ENV !== 'production' || process.env.SEED_DEMO === '1') {
+    await seedCatalog();
+  } else {
+    console.log('[seed] production: demo katalog atlandı (SEED_DEMO=1 ile zorlayabilirsiniz).');
+  }
 }
 
 main()
