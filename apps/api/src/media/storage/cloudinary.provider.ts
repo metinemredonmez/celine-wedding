@@ -6,11 +6,17 @@ import type { SignedUpload, StorageProvider } from './storage.interface';
 /**
  * Cloudinary adapter. Signs direct browser uploads (the API secret never leaves
  * the server) and deletes assets by public id. Byte payloads never pass through
- * Node — see docs/DATA-MODEL.md §5.
+ * Node — see docs/DATA-MODEL.md §5. Credentials are set once via cloudinary.config().
  */
 @Injectable()
 export class CloudinaryProvider implements StorageProvider {
-  constructor(private readonly config: ConfigService) {}
+  constructor(private readonly config: ConfigService) {
+    cloudinary.config({
+      cloud_name: this.config.get<string>('CLOUDINARY_CLOUD_NAME'),
+      api_key: this.config.get<string>('CLOUDINARY_API_KEY'),
+      api_secret: this.config.get<string>('CLOUDINARY_API_SECRET'),
+    });
+  }
 
   signUpload(params: { folder: string; publicId?: string }): SignedUpload {
     const timestamp = Math.round(Date.now() / 1000);
@@ -35,10 +41,6 @@ export class CloudinaryProvider implements StorageProvider {
   }
 
   async destroy(publicId: string): Promise<void> {
-    await cloudinary.uploader.destroy(publicId, {
-      api_key: this.config.getOrThrow<string>('CLOUDINARY_API_KEY'),
-      api_secret: this.config.getOrThrow<string>('CLOUDINARY_API_SECRET'),
-      cloud_name: this.config.getOrThrow<string>('CLOUDINARY_CLOUD_NAME'),
-    });
+    await cloudinary.uploader.destroy(publicId, { invalidate: true });
   }
 }
