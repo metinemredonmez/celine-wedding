@@ -33,6 +33,12 @@ enum AdminRole {
   ADMIN
 }
 
+enum TryOnStatus {
+  PENDING
+  DONE
+  FAILED
+}
+
 // ────────────────────────── MODELS ───────────────────────────
 
 model Collection {
@@ -68,7 +74,8 @@ model Dress {
   collectionId String?
   collection   Collection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
 
-  images Image[]
+  images        Image[]
+  tryOnRequests TryOnRequest[]
 
   // Public queries filter by status+featured and sort by order/createdAt.
   @@index([status, featured, order])
@@ -132,4 +139,24 @@ model SiteSettings {
   updatedAt DateTime @updatedAt
 
   @@map("site_settings")
+}
+
+// Virtual Try-On (AI) — a bride uploads her photo and previews a gown on herself.
+// Provider-agnostic: the actual AI service is chosen via env (see docs/VIRTUAL-TRYON.md).
+model TryOnRequest {
+  id              String      @id @default(cuid())
+  personImageUrl  String // bride photo (Cloudinary)
+  garmentImageUrl String // gown image sent to the model
+  resultUrl       String? // generated composite
+  status          TryOnStatus @default(PENDING)
+  provider        String? // which provider handled it
+  error           String?     @db.Text
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  dressId String?
+  dress   Dress?  @relation(fields: [dressId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@map("try_on_requests")
 }
