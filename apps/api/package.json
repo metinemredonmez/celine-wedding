@@ -17,7 +17,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "admin:password": "ts-node prisma/set-admin-password.ts"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
