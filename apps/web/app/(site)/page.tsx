@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getCollections, getContent, getDresses, getSiteSettings } from "@/lib/api";
 import { c, toParagraphs } from "@/lib/content";
+import { getLocale } from "@/lib/i18n";
+import { t } from "@/lib/i18n/config";
 import { Container } from "@/components/site/Container";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Media } from "@/components/site/Media";
@@ -19,12 +21,14 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   // Veriyi paralel çek; hata olursa lib/api zarifçe boş döner.
-  const [featuredPage, collections, settings, content] = await Promise.all([
-    getDresses({ featured: true, limit: 6 }),
-    getCollections(),
-    getSiteSettings(),
-    getContent(),
-  ]);
+  const [featuredPage, collections, settings, content, locale] =
+    await Promise.all([
+      getDresses({ featured: true, limit: 6 }),
+      getCollections(),
+      getSiteSettings(),
+      getContent(),
+      getLocale(),
+    ]);
 
   const featured = featuredPage.data;
   const teaserCollections = collections.slice(0, 3);
@@ -160,7 +164,7 @@ export default async function HomePage() {
                         </p>
                       ) : null}
                       <span className="u-label mt-1 !text-[0.62rem] text-rose">
-                        Koleksiyonu Gör
+                        {t(locale, "home.collections.viewOne")}
                       </span>
                     </div>
                   </Link>
@@ -217,7 +221,7 @@ export default async function HomePage() {
             <Reveal y={24}>
               <Media
                 src={c(content, "home.story.image")}
-                alt="Celine Gelinlik atölyesi — el işçiliği"
+                alt={t(locale, "alt.atelierCraft")}
                 ratio="portrait"
                 position="center"
               />

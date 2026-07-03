@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getCollection, getCollections } from "@/lib/api";
+import { getLocale } from "@/lib/i18n";
+import { t } from "@/lib/i18n/config";
 import { Container } from "@/components/site/Container";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Media } from "@/components/site/Media";
@@ -42,9 +44,10 @@ export async function generateMetadata({
 // generateStaticParams gerekmez — dinamik render + ISR (lib/api revalidate).
 export default async function KoleksiyonDetayPage({ params }: PageProps) {
   const { slug } = await params;
-  const [collection, allCollections] = await Promise.all([
+  const [collection, allCollections, locale] = await Promise.all([
     getCollection(slug),
     getCollections(),
+    getLocale(),
   ]);
 
   if (!collection) {
@@ -64,7 +67,7 @@ export default async function KoleksiyonDetayPage({ params }: PageProps) {
               href="/koleksiyonlar"
               className="u-label text-faint transition-colors hover:text-rose"
             >
-              Koleksiyonlar
+              {t(locale, "home.collections.eyebrow")}
             </Link>
             <h1 className="font-display mt-5 text-4xl text-ink sm:text-5xl md:text-6xl">
               {collection.name}
@@ -95,11 +98,18 @@ export default async function KoleksiyonDetayPage({ params }: PageProps) {
         <Container>
           <Reveal>
             <SectionHeading
-              eyebrow={dresses.length > 0 ? `${dresses.length} Model` : "Modeller"}
-              title="Bu koleksiyondan"
+              eyebrow={
+                dresses.length > 0
+                  ? t(locale, "koleksiyon.modelCount").replace(
+                      "{n}",
+                      String(dresses.length),
+                    )
+                  : t(locale, "modeller.eyebrow")
+              }
+              title={t(locale, "koleksiyon.fromThis")}
               subtitle={
                 dresses.length > 0
-                  ? "Her biri ölçüye özel dikilen, kişiye özel yorumlanan tasarımlar. Beğendiğiniz modeli atölyemizde birlikte hayata geçirelim."
+                  ? t(locale, "koleksiyon.detailSubtitle")
                   : undefined
               }
               align="left"
@@ -109,9 +119,7 @@ export default async function KoleksiyonDetayPage({ params }: PageProps) {
           {dresses.length === 0 ? (
             <Reveal className="mt-10 max-w-xl">
               <p className="text-muted leading-relaxed">
-                Bu koleksiyonun modelleri çok yakında burada olacak. Dilerseniz
-                şimdiden atölyemizde bir randevu oluşturabilir, size özel
-                tasarımı birlikte konuşabiliriz.
+                {t(locale, "koleksiyon.emptyBody")}
               </p>
             </Reveal>
           ) : (
@@ -135,7 +143,9 @@ export default async function KoleksiyonDetayPage({ params }: PageProps) {
         <section className="border-t border-rose-soft bg-powder py-14 sm:py-20">
           <Container>
             <Reveal className="flex flex-col items-center gap-6 text-center">
-              <span className="u-label text-rose">Diğer koleksiyonlar</span>
+              <span className="u-label text-rose">
+                {t(locale, "koleksiyon.otherCollections")}
+              </span>
               <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
                 {others.map((col) => (
                   <Link

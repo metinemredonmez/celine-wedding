@@ -186,8 +186,7 @@ export default async function KoleksiyonlarPage() {
           <Container>
             <Reveal className="mx-auto max-w-xl py-16 text-center">
               <p className="text-muted leading-relaxed">
-                Koleksiyonlarımız çok yakında burada. O zamana dek, size özel bir
-                gelinlik için atölyemizde randevu oluşturabilirsiniz.
+                {t(locale, "koleksiyon.landingEmpty")}
               </p>
             </Reveal>
           </Container>

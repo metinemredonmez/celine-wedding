@@ -41,7 +41,7 @@ export async function Footer() {
               <p className="text-sm leading-relaxed text-faint">{s.address}</p>
             ) : (
               <p className="text-sm leading-relaxed text-faint">
-                Maltepe, İstanbul
+                {t(locale, "footer.addressFallback")}
               </p>
             )}
           </div>

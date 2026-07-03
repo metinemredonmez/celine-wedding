@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { getContent, getSiteSettings } from "@/lib/api";
 import { c, toParagraphs } from "@/lib/content";
+import { getLocale } from "@/lib/i18n";
+import { t } from "@/lib/i18n/config";
 import { instagramLink, telLink, waLink } from "@/lib/utils";
 import { Container } from "@/components/site/Container";
 import { SectionHeading } from "@/components/site/SectionHeading";
@@ -31,9 +33,10 @@ function DetailRow({ label, children }: DetailRowProps) {
 }
 
 export default async function IletisimPage() {
-  const [content, settings] = await Promise.all([
+  const [content, settings, locale] = await Promise.all([
     getContent(),
     getSiteSettings(),
+    getLocale(),
   ]);
 
   const address = settings.address?.trim() || FALLBACK_ADDRESS;
@@ -45,7 +48,7 @@ export default async function IletisimPage() {
   const mapUrl = settings.mapUrl?.trim() || null;
 
   const waHref = whatsapp
-    ? waLink(whatsapp, "Merhaba, Celine Gelinlik ile iletişime geçmek istiyorum.")
+    ? waLink(whatsapp, t(locale, "iletisim.contactMessage"))
     : null;
 
   const igLabel = igHandle
@@ -96,7 +99,7 @@ export default async function IletisimPage() {
             {/* Sol: bilgiler */}
             <Reveal>
               <div className="flex flex-col gap-7 rounded-[2px] bg-cream p-8 sm:p-10">
-                <DetailRow label="Adres">
+                <DetailRow label={t(locale, "label.address")}>
                   <p className="whitespace-pre-line">{address}</p>
                   <a
                     href={directionsHref}
@@ -104,12 +107,12 @@ export default async function IletisimPage() {
                     rel="noopener noreferrer"
                     className="mt-2 inline-block text-rose underline-offset-4 transition-colors hover:text-ink hover:underline"
                   >
-                    Yol tarifi al
+                    {t(locale, "iletisim.directions")}
                   </a>
                 </DetailRow>
 
                 {phone ? (
-                  <DetailRow label="Telefon">
+                  <DetailRow label={t(locale, "label.phone")}>
                     <a href={tel ?? undefined} className="transition-colors hover:text-rose">
                       {phone}
                     </a>
@@ -117,20 +120,20 @@ export default async function IletisimPage() {
                 ) : null}
 
                 {waHref ? (
-                  <DetailRow label="WhatsApp">
+                  <DetailRow label={t(locale, "label.whatsapp")}>
                     <a
                       href={waHref}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="transition-colors hover:text-rose"
                     >
-                      WhatsApp üzerinden yazın
+                      {t(locale, "iletisim.whatsappLink")}
                     </a>
                   </DetailRow>
                 ) : null}
 
                 {instagram && igLabel ? (
-                  <DetailRow label="Instagram">
+                  <DetailRow label={t(locale, "label.instagram")}>
                     <a
                       href={instagram}
                       target="_blank"
@@ -168,7 +171,7 @@ export default async function IletisimPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      WhatsApp
+                      {t(locale, "label.whatsapp")}
                     </ButtonLink>
                   </div>
                 ) : null}
@@ -180,7 +183,7 @@ export default async function IletisimPage() {
               <div className="group relative h-full min-h-[380px] overflow-hidden rounded-[2px] bg-powder-deep lg:min-h-[460px]">
                 <iframe
                   src={mapEmbed}
-                  title="Celine Gelinlik atölye konumu"
+                  title={t(locale, "iletisim.mapTitle")}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   className="h-full min-h-[380px] w-full border-0 grayscale-[.55] contrast-[1.05] transition-[filter] duration-700 group-hover:grayscale-0 lg:min-h-[460px]"
@@ -192,7 +195,7 @@ export default async function IletisimPage() {
                   rel="noopener noreferrer"
                   className="u-label absolute bottom-4 left-4 inline-flex items-center rounded-[2px] bg-cream/95 px-4 py-2.5 text-ink shadow-sm backdrop-blur transition-colors hover:bg-cream"
                 >
-                  Yol Tarifi Al
+                  {t(locale, "iletisim.directions")}
                 </a>
               </div>
             </Reveal>

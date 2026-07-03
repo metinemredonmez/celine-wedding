@@ -207,4 +207,42 @@ export const TRANSLATIONS: Record<string, Record<Locale, string>> = {
   "koleksiyon.fallback.dantel": { tr: "El işi dantelin sabırla dokunduğu, zamansız bir romantizm.", en: "Timeless romance, where handmade lace is woven with patience.", ar: "رومانسية خالدة، حيث يُنسَج الدانتيل اليدوي بصبر.", ru: "Вечная романтика, где кружево ручной работы соткано с терпением." },
   "koleksiyon.fallback.saten": { tr: "Işığı taşıyan saten; sade, güçlü ve kendinden emin.", en: "Satin that carries the light — pure, strong and self-assured.", ar: "ساتان يحمل الضوء؛ نقيّ وقويّ وواثق.", ru: "Атлас, несущий свет, — простой, сильный и уверенный." },
   "koleksiyon.fallback.modern": { tr: "Net çizgiler ve çağdaş siluet — bugünün gelini için.", en: "Clean lines and a contemporary silhouette — for today's bride.", ar: "خطوط نقية وقوام عصري — لعروس اليوم.", ru: "Чёткие линии и современный силуэт — для сегодняшней невесты." },
+  "koleksiyon.modelCount": { tr: "{n} Model", en: "{n} Gowns", ar: "{n} فستان", ru: "{n} моделей" },
+  "koleksiyon.fromThis": { tr: "Bu koleksiyondan", en: "From this collection", ar: "من هذه المجموعة", ru: "Из этой коллекции" },
+  "koleksiyon.detailSubtitle": { tr: "Her biri ölçüye özel dikilen, kişiye özel yorumlanan tasarımlar. Beğendiğiniz modeli atölyemizde birlikte hayata geçirelim.", en: "Each design made to measure and interpreted just for you. Let's bring the gown you love to life together in our atelier.", ar: "كل تصميم يُخاط على المقاس ويُبتكَر خصّيصاً لكِ. لنُجسّد معاً في مشغلنا الفستان الذي يعجبكِ.", ru: "Каждая модель шьётся по вашим меркам и создаётся лично для вас. Давайте вместе воплотим понравившееся платье в нашем ателье." },
+  "koleksiyon.emptyBody": { tr: "Bu koleksiyonun modelleri çok yakında burada olacak. Dilerseniz şimdiden atölyemizde bir randevu oluşturabilir, size özel tasarımı birlikte konuşabiliriz.", en: "The gowns of this collection will be here very soon. If you wish, you can book an appointment in our atelier now and discuss your bespoke design together.", ar: "ستتوفّر فساتين هذه المجموعة قريبًا جدًا. إن رغبتِ، يمكنك الآن حجز موعد في مشغلنا لنتحدّث معًا عن تصميمك الخاص.", ru: "Модели этой коллекции появятся здесь очень скоро. При желании вы уже можете записаться на приём в наше ателье и вместе обсудить ваш индивидуальный дизайн." },
+  "koleksiyon.landingEmpty": { tr: "Koleksiyonlarımız çok yakında burada. O zamana dek, size özel bir gelinlik için atölyemizde randevu oluşturabilirsiniz.", en: "Our collections will be here very soon. Until then, you can book an appointment in our atelier for a gown made just for you.", ar: "ستتوفّر مجموعاتنا قريبًا جدًا. حتى ذلك الحين، يمكنك حجز موعد في مشغلنا لفستان يُصمَّم خصّيصًا لكِ.", ru: "Наши коллекции появятся здесь очень скоро. А пока вы можете записаться на приём в наше ателье, чтобы создать платье специально для вас." },
+
+  // --- Ana sayfa koleksiyon kartı --- //
+  "home.collections.viewOne": { tr: "Koleksiyonu Gör", en: "View Collection", ar: "عرض المجموعة", ru: "Смотреть коллекцию" },
+
+  // --- İletişim --- //
+  "iletisim.whatsappLink": { tr: "WhatsApp üzerinden yazın", en: "Message us on WhatsApp", ar: "راسلنا عبر واتساب", ru: "Написать нам в WhatsApp" },
+  "label.instagram": { tr: "Instagram", en: "Instagram", ar: "إنستغرام", ru: "Instagram" },
+  "iletisim.directions": { tr: "Yol tarifi al", en: "Get directions", ar: "احصلي على الاتجاهات", ru: "Проложить маршрут" },
+  "iletisim.mapTitle": { tr: "Celine Gelinlik atölye konumu", en: "Celine Gelinlik atelier location", ar: "موقع مشغل سيلين للأزياء", ru: "Расположение ателье Celine Gelinlik" },
+  "iletisim.contactMessage": { tr: "Merhaba, Celine Gelinlik ile iletişime geçmek istiyorum.", en: "Hello, I would like to get in touch with Celine Gelinlik.", ar: "مرحبًا، أودّ التواصل مع سيلين للأزياء.", ru: "Здравствуйте, я хотела бы связаться с Celine Gelinlik." },
+
+  // --- Özel Dikim bandı --- //
+  "ozeldikim.bandEyebrow": { tr: "El emeği", en: "Handcraft", ar: "صناعة يدوية", ru: "Ручная работа" },
+
+  // --- Görsel alt metinleri (erişilebilirlik) --- //
+  "alt.atelierCraft": { tr: "Celine Gelinlik atölyesi — el işçiliği", en: "Celine Gelinlik atelier — handcraft", ar: "مشغل سيلين للأزياء — صناعة يدوية", ru: "Ателье Celine Gelinlik — ручная работа" },
+  "alt.bespokeDetail": { tr: "Özel dikim — saten ve el işi dantel detayı", en: "Bespoke tailoring — satin and handmade lace detail", ar: "خياطة خاصة — تفاصيل الساتان والدانتيل اليدوي", ru: "Индивидуальный пошив — атлас и кружево ручной работы" },
+
+  // --- Gelinlik detay sayfası --- //
+  "detail.breadcrumb": { tr: "Gelinlikler", en: "Bridal Gowns", ar: "فساتين الزفاف", ru: "Свадебные платья" },
+  "detail.couture": { tr: "Couture", en: "Couture", ar: "كوتور", ru: "Кутюр" },
+  "detail.description": { tr: "Ölçüye özel, atölyemizde el işçiliğiyle hazırlanan couture bir tasarım. Her Celine gelinliği; kumaş, form ve detaylar size göre yeniden yorumlanarak dikilir.", en: "A couture design made to measure and crafted by hand in our atelier. Every Celine gown is reinterpreted and sewn — fabric, form and detail — just for you.", ar: "تصميم كوتور يُخاط على المقاس ويُصنَع يدويًا في مشغلنا. كل فستان من سيلين يُعاد ابتكاره وخياطته — القماش والقَصّة والتفاصيل — خصّيصًا لكِ.", ru: "Дизайн от кутюр, сшитый по вашим меркам вручную в нашем ателье. Каждое платье Celine — ткань, форма и детали — переосмысливается и шьётся специально для вас." },
+  "detail.fabricLabel": { tr: "Kumaş & Detay", en: "Fabric & Detail", ar: "القماش والتفاصيل", ru: "Ткань и детали" },
+  "detail.collectionLabel": { tr: "Koleksiyon", en: "Collection", ar: "المجموعة", ru: "Коллекция" },
+  "detail.productionLabel": { tr: "Üretim", en: "Production", ar: "التصنيع", ru: "Изготовление" },
+  "detail.productionValue": { tr: "Ölçüye özel dikim", en: "Made to measure", ar: "خياطة على المقاس", ru: "Пошив по меркам" },
+  "detail.appointmentCta": { tr: "Bu gelinlik için randevu al", en: "Book an appointment for this gown", ar: "احجزي موعدًا لهذا الفستان", ru: "Записаться на примерку этого платья" },
+  "detail.whatsappAsk": { tr: "WhatsApp'tan sor", en: "Ask on WhatsApp", ar: "اسألي عبر واتساب", ru: "Спросить в WhatsApp" },
+  "detail.priceNote": { tr: "Fiyat bilgisi tasarımın kumaş, işçilik ve detaylarına göre değişir; randevu görüşmemizde birlikte netleştiririz.", en: "Pricing depends on the fabric, craftsmanship and details of the design; we clarify it together during your appointment.", ar: "يعتمد السعر على قماش التصميم وحِرفيّته وتفاصيله؛ نوضّحه معًا خلال موعدك.", ru: "Стоимость зависит от ткани, работы и деталей модели; мы уточним её вместе на вашей встрече." },
+  "detail.relatedEyebrow": { tr: "Keşfet", en: "Discover", ar: "اكتشفي", ru: "Открыть" },
+  "detail.relatedTitle": { tr: "Benzer Gelinlikler", en: "Similar Gowns", ar: "فساتين مشابهة", ru: "Похожие платья" },
+  "detail.waText": { tr: 'Merhaba, "{name}" modeli için randevu almak istiyorum.', en: 'Hello, I would like to book an appointment for the "{name}" gown.', ar: 'مرحبًا، أودّ حجز موعد لفستان "{name}".', ru: 'Здравствуйте, я хотела бы записаться на примерку платья «{name}».' },
+  "detail.imageAlt": { tr: "{name} — görsel {n}", en: "{name} — image {n}", ar: "{name} — صورة {n}", ru: "{name} — фото {n}" },
 };

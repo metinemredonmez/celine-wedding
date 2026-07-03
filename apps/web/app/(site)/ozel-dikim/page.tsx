@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getContent } from "@/lib/api";
 import { c } from "@/lib/content";
+import { getLocale } from "@/lib/i18n";
+import { t } from "@/lib/i18n/config";
 import { Container } from "@/components/site/Container";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Media } from "@/components/site/Media";
@@ -16,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default async function OzelDikimPage() {
-  const content = await getContent();
+  const [content, locale] = await Promise.all([getContent(), getLocale()]);
 
   const steps = [1, 2, 3, 4].map((n) => ({
     step: `0${n}`,
@@ -49,7 +51,7 @@ export default async function OzelDikimPage() {
             <Reveal delay={0.15}>
               <Media
                 src={c(content, "ozeldikim.image")}
-                alt="Özel dikim — saten ve el işi dantel detayı"
+                alt={t(locale, "alt.bespokeDetail")}
                 ratio="portrait"
                 position="center"
               />
@@ -143,7 +145,9 @@ export default async function OzelDikimPage() {
         />
         <Container className="relative flex h-full flex-col items-center justify-center gap-5 text-center">
           <Reveal className="flex flex-col items-center gap-5">
-            <span className="u-label text-cream/80">El emeği</span>
+            <span className="u-label text-cream/80">
+              {t(locale, "ozeldikim.bandEyebrow")}
+            </span>
             <p className="font-display max-w-2xl text-2xl leading-[1.25] text-cream sm:text-3xl md:text-[2.5rem]">
               {c(content, "ozeldikim.bandLine")}
             </p>

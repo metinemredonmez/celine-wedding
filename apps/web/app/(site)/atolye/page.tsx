@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getContent, getSiteSettings } from "@/lib/api";
 import { c, toParagraphs } from "@/lib/content";
+import { getLocale } from "@/lib/i18n";
+import { t } from "@/lib/i18n/config";
 import { Container } from "@/components/site/Container";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Media } from "@/components/site/Media";
@@ -14,9 +16,10 @@ export const metadata: Metadata = {
 };
 
 export default async function AtolyePage() {
-  const [content, settings] = await Promise.all([
+  const [content, settings, locale] = await Promise.all([
     getContent(),
     getSiteSettings(),
+    getLocale(),
   ]);
 
   const storyParagraphs = toParagraphs(c(content, "atolye.storyBody"));
@@ -59,7 +62,7 @@ export default async function AtolyePage() {
             <Reveal y={24}>
               <Media
                 src={c(content, "atolye.image")}
-                alt="Celine Gelinlik atölyesi — el işçiliği"
+                alt={t(locale, "alt.atelierCraft")}
                 ratio="portrait"
                 position="center"
               />
