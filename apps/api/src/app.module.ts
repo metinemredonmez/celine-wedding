@@ -14,6 +14,7 @@ import { DressesModule } from './dresses/dresses.module';
 import { AppointmentsModule } from './appointments/appointments.module';
 import { AvailabilityModule } from './availability/availability.module';
 import { SiteSettingsModule } from './site-settings/site-settings.module';
+import { ContentModule } from './content/content.module';
 import { TryOnModule } from './try-on/try-on.module';
 
 @Module({
@@ -32,6 +33,7 @@ import { TryOnModule } from './try-on/try-on.module';
     AppointmentsModule,
     AvailabilityModule,
     SiteSettingsModule,
+    ContentModule,
     TryOnModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],

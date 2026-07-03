@@ -188,6 +188,14 @@ export interface SiteSettingsInput {
   heroVideo?: string;
 }
 
+/** İçerik anahtar/değer haritası (GET /content). */
+export type ContentMap = Record<string, string>;
+
+/** PATCH /content gövdesi. */
+export interface ContentInput {
+  items: { key: string; value: string }[];
+}
+
 // ─────────────────────────── Medya ───────────────────────────
 
 /** POST /media/sign yanıtı — Cloudinary imzalı direkt upload parametreleri. */

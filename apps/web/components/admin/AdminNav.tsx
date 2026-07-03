@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import {
   CalendarDays,
   CalendarCheck2,
+  FileText,
   FolderOpen,
   LayoutGrid,
   Settings,
@@ -18,6 +19,7 @@ const ADMIN_NAV = [
   { label: "Panel", short: "Panel", href: "/admin", icon: LayoutGrid },
   { label: "Gelinlikler", short: "Modeller", href: "/admin/gelinlikler", icon: Sparkles },
   { label: "Koleksiyonlar", short: "Koleksiyon", href: "/admin/koleksiyonlar", icon: FolderOpen },
+  { label: "İçerik", short: "İçerik", href: "/admin/icerik", icon: FileText },
   { label: "Randevular", short: "Randevu", href: "/admin/randevular", icon: CalendarCheck2 },
   { label: "Takvim", short: "Takvim", href: "/admin/takvim", icon: CalendarDays },
   { label: "Ayarlar", short: "Ayarlar", href: "/admin/ayarlar", icon: Settings },
@@ -65,7 +67,7 @@ export function AdminMobileNav() {
       className="fixed inset-x-0 bottom-0 z-50 border-t border-ink/10 bg-cream md:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <div className="grid grid-cols-6">
+      <div className="grid grid-cols-7">
         {ADMIN_NAV.map(({ short, label, href, icon: Icon }) => {
           const active = isActive(pathname, href);
           return (

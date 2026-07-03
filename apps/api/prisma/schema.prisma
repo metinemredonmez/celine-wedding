@@ -144,6 +144,16 @@ model SiteSettings {
   @@map("site_settings")
 }
 
+// Site metin/görsel içeriği — anahtar/değer. Admin "İçerik" ekranından yönetilir.
+// Anahtarlar frontend'deki CONTENT_REGISTRY ile eşleşir; kayıt yoksa varsayılan kullanılır.
+model Content {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+
+  @@map("content")
+}
+
 // ─────────────── Calendar / booking availability ───────────────
 
 // Weekly recurring availability (e.g. Mon–Sat 10:00–19:00, 60-min slots).

@@ -145,6 +145,12 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   return data ?? {};
 }
 
+/** GET /content → { key: value } içerik haritası (hata: boş → varsayılanlar). */
+export async function getContent(): Promise<Record<string, string>> {
+  const data = await apiFetch<Record<string, string>>("/content");
+  return data ?? {};
+}
+
 // ------------------------------------------------------------------ //
 //  Randevu / müsaitlik                                                //
 // ------------------------------------------------------------------ //
