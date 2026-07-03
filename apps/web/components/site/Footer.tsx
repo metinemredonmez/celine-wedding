@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getContent, getSiteSettings } from "@/lib/api";
 import { c } from "@/lib/content";
+import { getLocale } from "@/lib/i18n";
+import { t } from "@/lib/i18n/config";
 import { NAV_ITEMS } from "@/lib/nav";
 import { instagramLink, telLink, waLink } from "@/lib/utils";
 import { Container } from "./Container";
@@ -10,7 +12,11 @@ import { Container } from "./Container";
  * Server component; SiteSettings'ten iletişim bilgilerini çeker.
  */
 export async function Footer() {
-  const [s, content] = await Promise.all([getSiteSettings(), getContent()]);
+  const [s, content, locale] = await Promise.all([
+    getSiteSettings(),
+    getContent(),
+    getLocale(),
+  ]);
   const wa = s.whatsapp ?? process.env.NEXT_PUBLIC_WHATSAPP_PHONE ?? "";
   const ig = instagramLink(s.instagram ?? process.env.NEXT_PUBLIC_INSTAGRAM);
   const tel = telLink(s.phone);
@@ -42,21 +48,21 @@ export async function Footer() {
 
           {/* Menü */}
           <nav className="flex flex-col gap-3">
-            <span className="u-label text-faint">Menü</span>
+            <span className="u-label text-faint">{t(locale, "footer.section.menu")}</span>
             {NAV_ITEMS.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className="text-sm text-muted transition-colors hover:text-ink"
               >
-                {item.label}
+                {t(locale, item.key)}
               </Link>
             ))}
           </nav>
 
           {/* İletişim */}
           <div className="flex flex-col gap-3">
-            <span className="u-label text-faint">İletişim</span>
+            <span className="u-label text-faint">{t(locale, "footer.section.contact")}</span>
             {tel ? (
               <a
                 href={tel}
@@ -82,19 +88,19 @@ export async function Footer() {
                 rel="noopener noreferrer"
                 className="text-sm text-muted transition-colors hover:text-ink"
               >
-                Haritada gör
+                {t(locale, "footer.contact.mapLink")}
               </a>
             ) : null}
           </div>
 
           {/* Randevu + WhatsApp */}
           <div className="flex flex-col gap-3">
-            <span className="u-label text-faint">Randevu</span>
+            <span className="u-label text-faint">{t(locale, "footer.section.appointment")}</span>
             <Link
               href="/randevu"
               className="text-sm text-muted transition-colors hover:text-ink"
             >
-              Randevu oluştur
+              {t(locale, "footer.appointment.cta")}
             </Link>
             {wa ? (
               <a
@@ -115,13 +121,13 @@ export async function Footer() {
         {/* Telif + KVKK */}
         <div className="mt-14 flex flex-col items-start justify-between gap-3 border-t border-rose-soft/40 pt-6 sm:flex-row sm:items-center">
           <p className="u-label !text-[0.6rem] text-faint">
-            © {year} Celine Gelinlik · Tüm hakları saklıdır
+            {t(locale, "footer.copyright").replace("{year}", String(year))}
           </p>
           <Link
             href="/kvkk"
             className="u-label !text-[0.6rem] text-faint transition-colors hover:text-ink"
           >
-            KVKK Aydınlatma Metni
+            {t(locale, "footer.legal.kvkk")}
           </Link>
         </div>
       </Container>

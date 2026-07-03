@@ -1,11 +1,13 @@
+import { getLocale } from "@/lib/i18n";
 import { HeaderNav } from "./HeaderNav";
 
 /**
- * Server wrapper. İleride SiteSettings'ten duyuru/telefon çekmek için buradan
- * geçebiliriz; şimdilik statik duyuru şeridiyle client HeaderNav'ı sarar.
+ * Server wrapper — aktif dili okuyup client HeaderNav'a geçirir (menü/butonlar
+ * ve dil değiştirici o dile göre render olur).
  */
-export function Header() {
-  return <HeaderNav />;
+export async function Header() {
+  const locale = await getLocale();
+  return <HeaderNav locale={locale} />;
 }
 
 export default Header;

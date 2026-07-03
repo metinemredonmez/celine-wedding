@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
+import { getLocale, isRtl } from "@/lib/i18n";
 import "./globals.css";
 
 // Serif başlık — AMSALE benzeri zarif, yüksek-kontrast his.
@@ -50,11 +51,16 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale();
   return (
-    <html lang="tr" className={`${cormorant.variable} ${inter.variable}`}>
+    <html
+      lang={locale}
+      dir={isRtl(locale) ? "rtl" : "ltr"}
+      className={`${cormorant.variable} ${inter.variable}`}
+    >
       <body className="min-h-screen bg-powder text-ink antialiased">
         {children}
       </body>

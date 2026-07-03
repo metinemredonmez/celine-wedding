@@ -16,6 +16,9 @@ import type {
   SiteSettings,
 } from "./types";
 
+import { resolveContentMap } from "./content";
+import { getLocale } from "./i18n";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 // ISR: veriyi 5 dk cache'le (couture showcase — sık değişmez).
@@ -145,10 +148,16 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   return data ?? {};
 }
 
-/** GET /content → { key: value } içerik haritası (hata: boş → varsayılanlar). */
+/**
+ * Bir dil için çözülmüş içerik haritası.
+ * TR: admin DB içeriği (+ TR varsayılan). Diğer diller: statik çeviri sözlüğü.
+ * (Per-locale DB düzenlemesi sonra; şimdilik EN/AR/RU koddan gelir.)
+ */
 export async function getContent(): Promise<Record<string, string>> {
-  const data = await apiFetch<Record<string, string>>("/content");
-  return data ?? {};
+  const locale = await getLocale();
+  const db =
+    locale === "tr" ? (await apiFetch<Record<string, string>>("/content")) ?? {} : {};
+  return resolveContentMap(locale, db);
 }
 
 // ------------------------------------------------------------------ //

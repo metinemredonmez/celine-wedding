@@ -4,17 +4,19 @@
 export interface NavItem {
   label: string;
   href: string;
+  /** i18n çeviri anahtarı (lib/i18n/translations) */
+  key: string;
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: "ANA SAYFA", href: "/" },
-  { label: "KOLEKSİYONLAR", href: "/koleksiyonlar" },
-  { label: "GELİNLİKLER", href: "/modeller" },
-  { label: "ÖZEL DİKİM", href: "/ozel-dikim" },
-  { label: "ATÖLYE", href: "/atolye" },
-  { label: "GERÇEK GELİNLER", href: "/gercek-gelinler" },
-  { label: "RANDEVU", href: "/randevu" },
-  { label: "İLETİŞİM", href: "/iletisim" },
+  { label: "ANA SAYFA", href: "/", key: "nav.home" },
+  { label: "KOLEKSİYONLAR", href: "/koleksiyonlar", key: "nav.collections" },
+  { label: "GELİNLİKLER", href: "/modeller", key: "nav.gowns" },
+  { label: "ÖZEL DİKİM", href: "/ozel-dikim", key: "nav.bespoke" },
+  { label: "ATÖLYE", href: "/atolye", key: "nav.atelier" },
+  { label: "GERÇEK GELİNLER", href: "/gercek-gelinler", key: "nav.realBrides" },
+  { label: "RANDEVU", href: "/randevu", key: "nav.appointment" },
+  { label: "İLETİŞİM", href: "/iletisim", key: "nav.contact" },
 ];
 
 // AMSALE header'da nav'ı wordmark'ın iki yanına bölmek için.

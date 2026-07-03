@@ -5,21 +5,21 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { NAV_ITEMS, NAV_LEFT, NAV_RIGHT } from "@/lib/nav";
+import { t, type Locale } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 type HeaderNavProps = {
-  /** üst duyuru şeridi metni */
-  announcement?: string;
+  locale: Locale;
 };
 
 /**
  * AMSALE header (client): scroll'da katılaşma + mobil tam ekran overlay.
- * Masaüstü: nav wordmark'ın iki yanına bölünür + sağda Randevu.
+ * Menü/butonlar aktif dile göre çevrilir; sağda dil değiştirici.
  */
-export function HeaderNav({
-  announcement = "Kişiye özel couture · Ölçüye özel · Randevu ile",
-}: HeaderNavProps) {
+export function HeaderNav({ locale }: HeaderNavProps) {
   const pathname = usePathname();
+  const announcement = t(locale, "header.announcement");
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -74,7 +74,7 @@ export function HeaderNav({
             <nav className="flex flex-1 items-center gap-7">
               {NAV_LEFT.map((item) => (
                 <Link key={item.href} href={item.href} className={linkCls(item.href)}>
-                  {item.label}
+                  {t(locale, item.key)}
                 </Link>
               ))}
             </nav>
@@ -95,15 +95,16 @@ export function HeaderNav({
             <nav className="flex flex-1 items-center justify-end gap-7">
               {NAV_RIGHT.filter((i) => i.href !== "/randevu").map((item) => (
                 <Link key={item.href} href={item.href} className={linkCls(item.href)}>
-                  {item.label}
+                  {t(locale, item.key)}
                 </Link>
               ))}
               <Link
                 href="/randevu"
                 className="u-label !text-[0.62rem] rounded-[2px] border border-rose px-4 py-2 text-ink transition-colors duration-300 hover:bg-ink hover:text-cream hover:border-ink"
               >
-                Randevu
+                {t(locale, "nav.appointment")}
               </Link>
+              <LanguageSwitcher current={locale} className="ml-1" />
             </nav>
           </div>
 
@@ -112,7 +113,7 @@ export function HeaderNav({
             <button
               type="button"
               onClick={() => setOpen(true)}
-              aria-label="Menüyü aç"
+              aria-label={t(locale, "header.menuOpen")}
               className="p-1 text-ink"
             >
               <Menu size={22} strokeWidth={1.5} />
@@ -155,7 +156,7 @@ export function HeaderNav({
           <button
             type="button"
             onClick={() => setOpen(false)}
-            aria-label="Menüyü kapat"
+            aria-label={t(locale, "header.menuClose")}
             className="p-1 text-ink"
           >
             <X size={24} strokeWidth={1.5} />
@@ -173,10 +174,14 @@ export function HeaderNav({
                 isActive(item.href) ? "text-ink" : "text-muted hover:text-ink",
               )}
             >
-              {item.label}
+              {t(locale, item.key)}
             </Link>
           ))}
         </nav>
+
+        <div className="flex justify-center pb-12">
+          <LanguageSwitcher current={locale} />
+        </div>
       </div>
     </>
   );

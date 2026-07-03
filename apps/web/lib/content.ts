@@ -5,6 +5,8 @@
 // `c(map, key)` ile okur. DB'de kayıt yoksa varsayılan kullanılır — yani içerik
 // sistemi boşken bile site şu anki metinlerle birebir görünür (sıfır regresyon).
 
+import { TRANSLATIONS } from "./i18n/translations";
+
 export type ContentType = "text" | "textarea" | "image";
 
 export type ContentField = {
@@ -140,6 +142,28 @@ export const CONTENT_REGISTRY: ContentField[] = [
 export const CONTENT_DEFAULTS: ContentMap = Object.fromEntries(
   CONTENT_REGISTRY.map((f) => [f.key, f.default]),
 );
+
+/**
+ * Bir dil için içerik haritasını çözer:
+ *   DB değeri (admin) → o dilin çevirisi → TR varsayılanı.
+ * Böylece sayfalar sadece `getContent(locale)` çağırır; c(map, key) aynı kalır.
+ */
+export function resolveContentMap(
+  locale: import("./i18n/translations").Locale,
+  dbMap: ContentMap,
+): ContentMap {
+  const out: ContentMap = {};
+  for (const field of CONTENT_REGISTRY) {
+    const db = dbMap[field.key];
+    if (typeof db === "string" && db.trim().length > 0) {
+      out[field.key] = db;
+      continue;
+    }
+    const tr = TRANSLATIONS[field.key]?.[locale];
+    out[field.key] = typeof tr === "string" && tr.length > 0 ? tr : field.default;
+  }
+  return out;
+}
 
 /** Alanları grup sırasına göre koruyarak gruplar (admin formu için). */
 export function contentGroups(): { group: string; fields: ContentField[] }[] {
