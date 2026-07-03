@@ -22,7 +22,12 @@ export async function Footer() {
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {/* Marka + slogan */}
           <div className="flex flex-col gap-4 lg:col-span-1">
-            <span className="u-wordmark text-lg text-ink">CELINE</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo-web.png"
+              alt="Celine Gelinlik — Seda Dönmez Couture"
+              className="h-16 w-auto self-start"
+            />
             <p className="max-w-xs text-sm leading-relaxed text-muted">
               {c(content, "footer.tagline")}
             </p>

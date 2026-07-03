@@ -81,10 +81,15 @@ export function HeaderNav({
 
             <Link
               href="/"
-              className="u-wordmark shrink-0 px-8 text-2xl text-ink"
+              className="shrink-0 px-8"
               aria-label="Celine Gelinlik ana sayfa"
             >
-              CELINE
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo-web.png"
+                alt="Celine Gelinlik — Seda Dönmez Couture"
+                className="h-11 w-auto"
+              />
             </Link>
 
             <nav className="flex flex-1 items-center justify-end gap-7">
@@ -115,10 +120,15 @@ export function HeaderNav({
 
             <Link
               href="/"
-              className="u-wordmark text-xl text-ink"
+              className="shrink-0"
               aria-label="Celine Gelinlik ana sayfa"
             >
-              CELINE
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo-web.png"
+                alt="Celine Gelinlik — Seda Dönmez Couture"
+                className="h-9 w-auto"
+              />
             </Link>
 
             {/* denge için görünmez placeholder */}
@@ -136,7 +146,12 @@ export function HeaderNav({
         aria-hidden={!open}
       >
         <div className="flex items-center justify-between px-6 py-4">
-          <span className="u-wordmark text-xl text-ink">CELINE</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-web.png"
+            alt="Celine Gelinlik"
+            className="h-8 w-auto"
+          />
           <button
             type="button"
             onClick={() => setOpen(false)}
