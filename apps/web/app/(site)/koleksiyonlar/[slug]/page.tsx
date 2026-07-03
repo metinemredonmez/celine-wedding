@@ -8,6 +8,7 @@ import { Media } from "@/components/site/Media";
 import { DressCard } from "@/components/site/DressCard";
 import { CtaBand } from "@/components/site/CtaBand";
 import { Reveal } from "@/components/motion/Reveal";
+import { collectionCover } from "@/lib/gallery";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -75,7 +76,7 @@ export default async function KoleksiyonDetayPage({ params }: PageProps) {
         <Container size="wide" className="mt-14 sm:mt-20">
           <Reveal y={28}>
             <Media
-              src={collection.coverImage ?? undefined}
+              src={collectionCover(collection.coverImage, 0)}
               alt={collection.name}
               ratio="hero"
               priority

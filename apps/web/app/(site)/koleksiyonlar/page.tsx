@@ -6,6 +6,7 @@ import { SectionHeading } from "@/components/site/SectionHeading";
 import { Media } from "@/components/site/Media";
 import { CtaBand } from "@/components/site/CtaBand";
 import { Reveal } from "@/components/motion/Reveal";
+import { collectionCover } from "@/lib/gallery";
 
 export const metadata: Metadata = {
   title: "Koleksiyonlar",
@@ -58,7 +59,7 @@ export default async function KoleksiyonlarPage() {
                   >
                     <div className="overflow-hidden bg-cream">
                       <Media
-                        src={collection.coverImage ?? undefined}
+                        src={collectionCover(collection.coverImage, i)}
                         alt={collection.name}
                         ratio="landscape"
                         priority={i < 2}

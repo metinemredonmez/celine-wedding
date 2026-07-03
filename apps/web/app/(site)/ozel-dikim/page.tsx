@@ -5,6 +5,7 @@ import { Media } from "@/components/site/Media";
 import { CtaBand } from "@/components/site/CtaBand";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
+import { BESPOKE_IMAGE } from "@/lib/gallery";
 
 export const metadata: Metadata = {
   title: "Özel Dikim",
@@ -69,7 +70,12 @@ export default function OzelDikimPage() {
             </Reveal>
 
             <Reveal delay={0.15}>
-              <Media ratio="portrait" position="center" />
+              <Media
+                src={BESPOKE_IMAGE}
+                alt="Özel dikim — saten ve el işi dantel detayı"
+                ratio="portrait"
+                position="center"
+              />
             </Reveal>
           </div>
         </Container>

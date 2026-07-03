@@ -11,6 +11,12 @@ export const HERO_IMAGE = "/gelinlikler/m01-7.jpg";
 /** "Hikâyemiz" bölümü — korse sırt detayı (Seda Dönmez filigranlı). */
 export const STORY_IMAGE = "/gelinlikler/m01-4.jpg";
 
+/** Atölye sayfası — inci işlemeli korsaj, çiçekli stüdyo. */
+export const ATELIER_IMAGE = "/gelinlikler/m01-1.jpg";
+
+/** Özel Dikim sayfası — saten + dantel eldiven detayı (couture işçilik). */
+export const BESPOKE_IMAGE = "/gelinlikler/m07-1.jpg";
+
 /**
  * Koleksiyon kartları için sıra bazlı kapak yedeği.
  * 0: Dantel · 1: Saten · 2: Modern — DB'de coverImage yoksa devreye girer.

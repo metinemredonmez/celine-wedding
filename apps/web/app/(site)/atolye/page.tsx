@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/site/SectionHeading";
 import { Media } from "@/components/site/Media";
 import { CtaBand } from "@/components/site/CtaBand";
 import { Reveal } from "@/components/motion/Reveal";
+import { ATELIER_IMAGE } from "@/lib/gallery";
 
 export const metadata: Metadata = {
   title: "Atölye",
@@ -54,6 +55,8 @@ export default async function AtolyePage() {
         <div className="grid lg:grid-cols-2">
           <Reveal className="lg:sticky lg:top-0 lg:h-screen">
             <Media
+              src={ATELIER_IMAGE}
+              alt="Celine Gelinlik atölyesi — el işçiliği"
               ratio="none"
               position="center"
               className="h-72 w-full sm:h-96 lg:h-full"

@@ -17,9 +17,12 @@ type BrideStory = {
   quote: string;
   /** portre / kare karışımı için oran */
   ratio: "portrait" | "square" | "landscape";
+  /** gerçek stüdyo/atölye karesi */
+  photo: string;
 };
 
-// Şimdilik statik/placeholder — görsel yokta Media pudra bloğu gösterir.
+// Gerçek atölye/prova kareleri. Gelinlerin gerçek düğün fotoğrafları
+// geldikçe admin'den güncellenecek; şimdilik gerçek gelinlik çekimleri.
 const STORIES: BrideStory[] = [
   {
     name: "Elif & Kaan",
@@ -27,6 +30,7 @@ const STORIES: BrideStory[] = [
     quote:
       "İlk provada aynada kendimi gördüğümde ağladım. Hayal ettiğimden çok daha fazlasıydı.",
     ratio: "portrait",
+    photo: "/gelinlikler/m06-1.jpg",
   },
   {
     name: "Zeynep & Arda",
@@ -34,6 +38,7 @@ const STORIES: BrideStory[] = [
     quote:
       "Her detayı benimle birlikte düşündüler. Elbisem gerçekten bana aitmiş gibi hissettim.",
     ratio: "square",
+    photo: "/gelinlikler/m03-1.jpg",
   },
   {
     name: "Merve & Can",
@@ -41,6 +46,7 @@ const STORIES: BrideStory[] = [
     quote:
       "Sadelik istedim ama sıradan olmasın dedim. Tam da anlattığım o dengeyi yakaladılar.",
     ratio: "portrait",
+    photo: "/gelinlikler/m02-1.jpg",
   },
   {
     name: "Deniz & Emir",
@@ -48,6 +54,7 @@ const STORIES: BrideStory[] = [
     quote:
       "Boncukların tek tek elle işlendiğini bilmek elbiseme bambaşka bir anlam kattı.",
     ratio: "square",
+    photo: "/gelinlikler/m08-1.jpg",
   },
   {
     name: "Selin & Ege",
@@ -55,6 +62,7 @@ const STORIES: BrideStory[] = [
     quote:
       "Şehir dışındaydım, çoğu görüşmeyi video ile yaptık. Yine de her an yanımdaydılar.",
     ratio: "portrait",
+    photo: "/gelinlikler/m07-1.jpg",
   },
   {
     name: "Ayşe & Mert",
@@ -62,6 +70,7 @@ const STORIES: BrideStory[] = [
     quote:
       "Annemin de beğeneceği, zamansız bir gelinlik istedim. İkimizi de mutlu etti.",
     ratio: "square",
+    photo: "/gelinlikler/m04-1.jpg",
   },
 ];
 
@@ -93,7 +102,12 @@ export default function GercekGelinlerPage() {
                 className="flex flex-col gap-5"
               >
                 <figure className="flex flex-col gap-5">
-                  <Media ratio={b.ratio} position="center" />
+                  <Media
+                    src={b.photo}
+                    alt={`${b.name} — Celine gelinliği`}
+                    ratio={b.ratio}
+                    position="center"
+                  />
                   <figcaption className="flex flex-col gap-3">
                     <p className="font-display text-lg leading-snug text-ink">
                       &ldquo;{b.quote}&rdquo;
