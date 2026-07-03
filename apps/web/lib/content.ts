@@ -68,6 +68,32 @@ export const CONTENT_REGISTRY: ContentField[] = [
   },
   { key: "home.story.cta", group: "Ana Sayfa — Hikâyemiz", type: "text", label: "Buton", default: "Atölyeyi Keşfet" },
   { key: "home.story.image", group: "Ana Sayfa — Hikâyemiz", type: "image", label: "Görsel", default: "/gelinlikler/m01-4.jpg" },
+
+  // ── Atölye sayfası ──
+  { key: "atolye.eyebrow", group: "Atölye Sayfası", type: "text", label: "Üst etiket", default: "Atölye" },
+  { key: "atolye.title", group: "Atölye Sayfası", type: "text", label: "Başlık", default: "Zarafet, el emeğiyle doğar" },
+  { key: "atolye.intro", group: "Atölye Sayfası", type: "textarea", label: "Giriş metni", default: "Celine Gelinlik, couture anlayışını el işçiliğiyle buluşturan bir atölyedir. Her gelinlik; özenle seçilen kumaşlar, elde işlenen danteller ve saatler süren emekle yalnızca tek bir gelin için hayat bulur." },
+  { key: "atolye.heroImage", group: "Atölye Sayfası", type: "image", label: "Arka plan görseli (bulanık)", hint: "Sayfanın üstünde bulanıklaştırılıp arka plan olarak kullanılır.", default: "/gelinlikler/m01-7.jpg" },
+  { key: "atolye.storyEyebrow", group: "Atölye Sayfası", type: "text", label: "Hikâye üst etiketi", default: "Hikâyemiz" },
+  { key: "atolye.storyTitle", group: "Atölye Sayfası", type: "text", label: "Hikâye başlığı", default: "Zanaatın sabrı, elin dokunuşu" },
+  { key: "atolye.storyBody", group: "Atölye Sayfası", type: "textarea", label: "Hikâye metni", hint: "Paragrafları boş satırla ayırın.", default: "Celine Gelinlik, Seda Dönmez'in yılların birikimini couture bir anlayışla buluşturduğu bir atölyedir. Burada gelinlik bir üründen çok; sabırla, sevgiyle ve elle örülen bir hikâyedir.\n\nHer gelinliğin kalıbı sıfırdan, o geline özel çıkarılır. Kumaş seçimi, dantelin dokunuşu, her boncuğun yeri tek tek düşünülür. Makinenin hızına değil, elin sabrına güveniriz.\n\nAmacımız yalnızca güzel bir elbise dikmek değil; sizi en çok kendiniz gibi hissettiren, düğün gününüzün her karesinde yanınızda duran bir eser yaratmaktır." },
+  { key: "atolye.image", group: "Atölye Sayfası", type: "image", label: "Hikâye görseli", default: "/gelinlikler/m01-1.jpg" },
+  { key: "atolye.craftEyebrow", group: "Atölye Sayfası", type: "text", label: "Zanaat üst etiketi", default: "Atölyede" },
+  { key: "atolye.craftTitle", group: "Atölye Sayfası", type: "text", label: "Zanaat başlığı", default: "Her dikişte özen" },
+  { key: "atolye.craftSubtitle", group: "Atölye Sayfası", type: "textarea", label: "Zanaat alt metni", default: "Couture, acele etmeden ve hakkını vererek çalışmaktır. Atölyemizde her gelinlik bu anlayışla hayat bulur." },
+  { key: "atolye.craft1.title", group: "Atölye Sayfası", type: "text", label: "Zanaat 1 başlık", default: "El emeği" },
+  { key: "atolye.craft1.text", group: "Atölye Sayfası", type: "textarea", label: "Zanaat 1 metin", default: "Dantel aplikeler, boncuk ve pul işlemeler tek tek elle işlenir. Sabır isteyen her detay, gelinliğinize ruh katar." },
+  { key: "atolye.craft2.title", group: "Atölye Sayfası", type: "text", label: "Zanaat 2 başlık", default: "Ölçüye özel kalıp" },
+  { key: "atolye.craft2.text", group: "Atölye Sayfası", type: "textarea", label: "Zanaat 2 metin", default: "Hazır beden yoktur. Kalıbınız yalnızca sizin ölçülerinize göre çıkarılır; provalarla milimetrik olarak size uyarlanır." },
+  { key: "atolye.craft3.title", group: "Atölye Sayfası", type: "text", label: "Zanaat 3 başlık", default: "Seçkin kumaşlar" },
+  { key: "atolye.craft3.text", group: "Atölye Sayfası", type: "textarea", label: "Zanaat 3 metin", default: "İpek, tül, kristal organze ve el işi dantel gibi özenle seçilmiş kumaşlarla çalışır; dokunuşun ve düşüşün hakkını veririz." },
+
+  // ── İletişim sayfası ──
+  { key: "iletisim.eyebrow", group: "İletişim Sayfası", type: "text", label: "Üst etiket", default: "İletişim" },
+  { key: "iletisim.title", group: "İletişim Sayfası", type: "text", label: "Başlık", default: "Bize ulaşın" },
+  { key: "iletisim.subtitle", group: "İletişim Sayfası", type: "textarea", label: "Alt metin", default: "Atölyemizde birebir görüşme, sorularınız ve randevu talepleriniz için size en kısa sürede dönüş yapmaktan mutluluk duyarız." },
+  { key: "iletisim.hoursTitle", group: "İletişim Sayfası", type: "text", label: "Saatler başlığı", default: "Çalışma Saatleri" },
+  { key: "iletisim.hours", group: "İletişim Sayfası", type: "textarea", label: "Çalışma saatleri", hint: "Her satır: Gün | Saat", default: "Pazartesi – Cuma | 10.00 – 19.00\nCumartesi | 10.00 – 18.00\nPazar | Randevu ile" },
 ];
 
 /** Anahtar → varsayılan değer haritası (kayıt yoksa buradan). */

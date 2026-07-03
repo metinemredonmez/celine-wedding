@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { getSiteSettings } from "@/lib/api";
+import { getContent, getSiteSettings } from "@/lib/api";
+import { c, toParagraphs } from "@/lib/content";
 import { instagramLink, telLink, waLink } from "@/lib/utils";
 import { Container } from "@/components/site/Container";
 import { SectionHeading } from "@/components/site/SectionHeading";
@@ -11,21 +12,12 @@ import { CtaBand } from "@/components/site/CtaBand";
 export const metadata: Metadata = {
   title: "İletişim",
   description:
-    "Celine Gelinlik atölyesine ulaşın — adres, telefon, WhatsApp ve çalışma saatleri. Maltepe, İstanbul.",
+    "Celine Gelinlik atölyesine ulaşın — adres, telefon, WhatsApp ve çalışma saatleri.",
 };
 
-// Statik iletişim bilgileri backend'de yoksa gösterilecek zarif yedekler.
 const FALLBACK_ADDRESS = "Maltepe, İstanbul";
-const WORKING_HOURS: Array<{ days: string; hours: string }> = [
-  { days: "Pazartesi – Cuma", hours: "10.00 – 19.00" },
-  { days: "Cumartesi", hours: "10.00 – 18.00" },
-  { days: "Pazar", hours: "Randevu ile" },
-];
 
-type DetailRowProps = {
-  label: string;
-  children: ReactNode;
-};
+type DetailRowProps = { label: string; children: ReactNode };
 
 /** Sol etiket + sağ değer satırı — ince hairline ile ayrılır. */
 function DetailRow({ label, children }: DetailRowProps) {
@@ -38,7 +30,10 @@ function DetailRow({ label, children }: DetailRowProps) {
 }
 
 export default async function IletisimPage() {
-  const settings = await getSiteSettings();
+  const [content, settings] = await Promise.all([
+    getContent(),
+    getSiteSettings(),
+  ]);
 
   const address = settings.address?.trim() || FALLBACK_ADDRESS;
   const phone = settings.phone?.trim() || null;
@@ -52,12 +47,23 @@ export default async function IletisimPage() {
     ? waLink(whatsapp, "Merhaba, Celine Gelinlik ile iletişime geçmek istiyorum.")
     : null;
 
-  // Instagram'da gösterilecek okunur etiket (@kullaniciadi).
   const igLabel = igHandle
     ? igHandle.startsWith("http")
       ? igHandle.replace(/^https?:\/\/(www\.)?instagram\.com\//, "@").replace(/\/$/, "")
       : `@${igHandle.replace(/^@/, "")}`
     : null;
+
+  // Modern harita: adresten anahtarsız Google embed; yön için ayrı link.
+  const mapQuery = encodeURIComponent(address);
+  const mapEmbed = `https://maps.google.com/maps?q=${mapQuery}&z=15&output=embed`;
+  const directionsHref =
+    mapUrl || `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+
+  // Çalışma saatleri — İçerik'ten ("Gün | Saat" satırları).
+  const hours = toParagraphs(c(content, "iletisim.hours")).map((line) => {
+    const [days, value] = line.split("|").map((s) => s.trim());
+    return { days, value: value ?? "" };
+  });
 
   return (
     <>
@@ -66,9 +72,9 @@ export default async function IletisimPage() {
         <Container>
           <Reveal>
             <SectionHeading
-              eyebrow="İletişim"
-              title="Bize ulaşın"
-              subtitle="Atölyemizde birebir görüşme, sorularınız ve randevu talepleriniz için size en kısa sürede dönüş yapmaktan mutluluk duyarız."
+              eyebrow={c(content, "iletisim.eyebrow")}
+              title={c(content, "iletisim.title")}
+              subtitle={c(content, "iletisim.subtitle")}
               align="center"
               size="lg"
             />
@@ -76,7 +82,7 @@ export default async function IletisimPage() {
         </Container>
       </section>
 
-      {/* İletişim detayları + harita */}
+      {/* İletişim detayları + modern harita */}
       <section className="bg-powder pb-24 sm:pb-28">
         <Container>
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
@@ -85,24 +91,19 @@ export default async function IletisimPage() {
               <div className="flex flex-col gap-7 rounded-[2px] bg-cream p-8 sm:p-10">
                 <DetailRow label="Adres">
                   <p className="whitespace-pre-line">{address}</p>
-                  {mapUrl ? (
-                    <a
-                      href={mapUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-2 inline-block text-rose underline-offset-4 transition-colors hover:text-ink hover:underline"
-                    >
-                      Yol tarifi al
-                    </a>
-                  ) : null}
+                  <a
+                    href={directionsHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-block text-rose underline-offset-4 transition-colors hover:text-ink hover:underline"
+                  >
+                    Yol tarifi al
+                  </a>
                 </DetailRow>
 
                 {phone ? (
                   <DetailRow label="Telefon">
-                    <a
-                      href={tel ?? undefined}
-                      className="transition-colors hover:text-rose"
-                    >
+                    <a href={tel ?? undefined} className="transition-colors hover:text-rose">
                       {phone}
                     </a>
                   </DetailRow>
@@ -135,15 +136,17 @@ export default async function IletisimPage() {
                 ) : null}
 
                 <div className="flex flex-col gap-1.5">
-                  <span className="u-label text-rose">Çalışma Saatleri</span>
+                  <span className="u-label text-rose">
+                    {c(content, "iletisim.hoursTitle")}
+                  </span>
                   <ul className="mt-1 flex flex-col gap-2">
-                    {WORKING_HOURS.map((row) => (
+                    {hours.map((row) => (
                       <li
                         key={row.days}
                         className="flex items-baseline justify-between gap-4 text-ink"
                       >
                         <span>{row.days}</span>
-                        <span className="text-muted">{row.hours}</span>
+                        <span className="text-muted">{row.value}</span>
                       </li>
                     ))}
                   </ul>
@@ -165,29 +168,25 @@ export default async function IletisimPage() {
               </div>
             </Reveal>
 
-            {/* Sağ: harita veya yer tutucu */}
+            {/* Sağ: modern monokrom harita (hover'da renklenir) */}
             <Reveal delay={0.1}>
-              <div className="h-full min-h-[360px] overflow-hidden rounded-[2px] bg-powder-deep lg:min-h-[440px]">
-                {mapUrl ? (
-                  <iframe
-                    src={mapUrl}
-                    title="Celine Gelinlik atölye konumu"
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    className="h-full min-h-[360px] w-full border-0 lg:min-h-[440px]"
-                    allowFullScreen
-                  />
-                ) : (
-                  <div className="flex h-full min-h-[360px] flex-col items-center justify-center gap-3 p-8 text-center lg:min-h-[440px]">
-                    <span className="u-label text-rose">Konum</span>
-                    <p className="max-w-xs font-display text-2xl text-ink">
-                      {address}
-                    </p>
-                    <p className="text-sm text-muted">
-                      Ziyaret öncesi randevu almanızı rica ederiz.
-                    </p>
-                  </div>
-                )}
+              <div className="group relative h-full min-h-[380px] overflow-hidden rounded-[2px] bg-powder-deep lg:min-h-[460px]">
+                <iframe
+                  src={mapEmbed}
+                  title="Celine Gelinlik atölye konumu"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="h-full min-h-[380px] w-full border-0 grayscale-[.55] contrast-[1.05] transition-[filter] duration-700 group-hover:grayscale-0 lg:min-h-[460px]"
+                  allowFullScreen
+                />
+                <a
+                  href={directionsHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="u-label absolute bottom-4 left-4 inline-flex items-center rounded-[2px] bg-cream/95 px-4 py-2.5 text-ink shadow-sm backdrop-blur transition-colors hover:bg-cream"
+                >
+                  Yol Tarifi Al
+                </a>
               </div>
             </Reveal>
           </div>
