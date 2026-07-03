@@ -12,7 +12,9 @@ export const metadata: Metadata = {
 export default async function KvkkPage() {
   const settings = await getSiteSettings();
   const phone = settings?.phone?.trim() || '';
-  const address = settings?.address?.trim() || 'İdealtepe Mah., Maltepe / İstanbul';
+  const address =
+    settings?.address?.trim() ||
+    'İdealtepe Mah. Panorama Sok. Defne Apt. No:5 D:7, Maltepe / İstanbul';
 
   return (
     <div className="bg-powder">

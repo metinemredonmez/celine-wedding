@@ -15,7 +15,8 @@ export const metadata: Metadata = {
     "Celine Gelinlik atölyesine ulaşın — adres, telefon, WhatsApp ve çalışma saatleri.",
 };
 
-const FALLBACK_ADDRESS = "Maltepe, İstanbul";
+const FALLBACK_ADDRESS =
+  "İdealtepe Mah. Panorama Sok. Defne Apt. No:5 D:7, Maltepe / İstanbul";
 
 type DetailRowProps = { label: string; children: ReactNode };
 
@@ -53,11 +54,17 @@ export default async function IletisimPage() {
       : `@${igHandle.replace(/^@/, "")}`
     : null;
 
-  // Modern harita: adresten anahtarsız Google embed; yön için ayrı link.
+  // Modern harita: mapUrl bir Google "embed" bağlantısıysa TAM pin olarak onu
+  // kullan; değilse adresten anahtarsız embed üret (yakın zoom). Yön için ayrı link.
   const mapQuery = encodeURIComponent(address);
-  const mapEmbed = `https://maps.google.com/maps?q=${mapQuery}&z=15&output=embed`;
+  const isEmbedUrl = !!mapUrl && /output=embed|\/maps\/embed/.test(mapUrl);
+  const mapEmbed = isEmbedUrl
+    ? (mapUrl as string)
+    : `https://maps.google.com/maps?q=${mapQuery}&z=16&output=embed`;
   const directionsHref =
-    mapUrl || `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+    mapUrl && !isEmbedUrl
+      ? mapUrl
+      : `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
   // Çalışma saatleri — İçerik'ten ("Gün | Saat" satırları).
   const hours = toParagraphs(c(content, "iletisim.hours")).map((line) => {
