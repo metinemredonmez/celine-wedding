@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { Dress, DressListItem } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { Media, firstImage } from "./Media";
 
 type DressCardProps = {
   dress: Dress | DressListItem;
@@ -12,8 +11,9 @@ type DressCardProps = {
 };
 
 /**
- * Portre foto (yoksa pudra placeholder) + model adı + koleksiyon.
- * /modeller/[slug] detayına link. Gölge yok, tiny radius, sakin hover.
+ * Portre foto (yoksa pudra "CELINE" placeholder) + model adı + koleksiyon.
+ * Kart üzerine gelince ikinci görsele yumuşak crossfade + hafif zoom — abartısız.
+ * /modeller/[slug] detayına link. Görsel yoksa placeholder; CSS-only hover.
  */
 export function DressCard({
   dress,
@@ -21,7 +21,11 @@ export function DressCard({
   className,
   priority = false,
 }: DressCardProps) {
-  const img = firstImage(dress.images);
+  const images = [...(dress.images ?? [])].sort(
+    (a, b) => (a.order ?? 0) - (b.order ?? 0),
+  );
+  const first = images[0];
+  const second = images[1];
   const collectionName = dress.collection?.name;
 
   return (
@@ -29,14 +33,37 @@ export function DressCard({
       href={`/modeller/${dress.slug}`}
       className={cn("group block", className)}
     >
-      <div className="overflow-hidden bg-cream">
-        <Media
-          src={img?.url}
-          alt={img?.alt ?? dress.name}
-          ratio="portrait"
-          priority={priority}
-          className="transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-        />
+      <div className="relative aspect-[3/4] overflow-hidden bg-powder-deep">
+        {first ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={first.url}
+              alt={first.alt ?? dress.name}
+              loading={priority ? "eager" : "lazy"}
+              decoding="async"
+              className={cn(
+                "absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-[900ms] ease-out group-hover:scale-[1.04]",
+                second && "group-hover:opacity-0",
+              )}
+            />
+            {second ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={second.url}
+                alt=""
+                aria-hidden
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover opacity-0 transition-[opacity,transform] duration-[900ms] ease-out group-hover:scale-[1.04] group-hover:opacity-100"
+              />
+            ) : null}
+          </>
+        ) : (
+          <span className="font-display absolute inset-0 flex items-center justify-center text-2xl tracking-[0.4em] text-rose/50">
+            CELINE
+          </span>
+        )}
       </div>
       <div className="mt-4 flex flex-col gap-1">
         <h3 className="font-display text-xl text-ink transition-colors group-hover:text-muted">

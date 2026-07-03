@@ -5,6 +5,7 @@ import { Media } from "@/components/site/Media";
 import { CtaBand } from "@/components/site/CtaBand";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
+import { Parallax } from "@/components/motion/Parallax";
 import { BESPOKE_IMAGE } from "@/lib/gallery";
 
 export const metadata: Metadata = {
@@ -147,6 +148,33 @@ export default function OzelDikimPage() {
               </p>
             </Reveal>
           </div>
+        </Container>
+      </section>
+
+      {/* Sinematik parallax bandı — kaydırırken görsel yavaşça kayar */}
+      <section className="relative h-[62vh] min-h-[420px] overflow-hidden bg-ink sm:h-[74vh]">
+        <Parallax
+          distance={70}
+          className="absolute inset-x-0 -top-[14%] h-[128%]"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/gelinlikler/m01-7.jpg"
+            alt=""
+            className="h-full w-full object-cover"
+          />
+        </Parallax>
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-t from-ink/65 via-ink/25 to-ink/35"
+        />
+        <Container className="relative flex h-full flex-col items-center justify-center gap-5 text-center">
+          <Reveal className="flex flex-col items-center gap-5">
+            <span className="u-label text-cream/80">El emeği</span>
+            <p className="font-display max-w-2xl text-2xl leading-[1.25] text-cream sm:text-3xl md:text-[2.5rem]">
+              Her ilmek sabırla atılır; her gelinlik, tek bir hikâye için.
+            </p>
+          </Reveal>
         </Container>
       </section>
 
