@@ -140,13 +140,7 @@ export default async function GercekGelinlerPage() {
         </Container>
       </section>
 
-      <CtaBand
-        tone="cream"
-        eyebrow="Sıradaki siz olun"
-        title="Kendi hikâyenizi yazın"
-        text="Bir sonraki Celine gelini siz olabilirsiniz. Size özel gelinlik yolculuğunuza başlamak için atölyemizden randevu alın."
-        whatsappText="Merhaba, Celine Gelinlik için randevu almak istiyorum."
-      />
+      <CtaBand tone="cream" />
     </>
   );
 }

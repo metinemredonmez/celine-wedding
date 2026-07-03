@@ -109,14 +109,7 @@ export default async function AtolyePage() {
         </Container>
       </section>
 
-      <CtaBand
-        tone="cream"
-        eyebrow="Ziyaret"
-        title="Atölyemizde tanışalım"
-        text="Kumaşlara dokunmak, tasarımları görmek ve hikâyenizi paylaşmak için sizi atölyemize bekliyoruz. Birebir görüşme için randevu oluşturun."
-        whatsappText="Merhaba, atölyenizi ziyaret etmek için randevu almak istiyorum."
-        settings={settings}
-      />
+      <CtaBand tone="cream" settings={settings} />
     </>
   );
 }

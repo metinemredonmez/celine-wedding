@@ -1,4 +1,6 @@
 import { getSiteSettings } from "@/lib/api";
+import { getLocale } from "@/lib/i18n";
+import { t } from "@/lib/i18n/config";
 import type { SiteSettings } from "@/lib/types";
 import { cn, waLink } from "@/lib/utils";
 import { ButtonLink } from "@/components/ui/Button";
@@ -6,6 +8,7 @@ import { Container } from "./Container";
 import { Reveal } from "@/components/motion/Reveal";
 
 type CtaBandProps = {
+  /** verilirse çeviri yerine bu metin kullanılır (TR sabit) */
   eyebrow?: string;
   title?: string;
   text?: string;
@@ -20,19 +23,28 @@ type CtaBandProps = {
 
 /**
  * Randevu bandı — "Randevu Al" (dolu koyu) + WhatsApp (outline).
+ * Metinler aktif dile göre çevrilir (cta.*); prop verilirse o kullanılır.
  * Server component; settings verilmezse kendi çeker (WhatsApp numarası için).
  */
 export async function CtaBand({
-  eyebrow = "Randevu",
-  title = "Size özel bir gelinlik yolculuğu",
-  text = "Atölyemizde birebir görüşme için randevu oluşturun; hikâyenizi dinleyelim, ölçüye özel tasarımınıza birlikte başlayalım.",
-  whatsappText = "Merhaba, Celine Gelinlik için randevu almak istiyorum.",
+  eyebrow,
+  title,
+  text,
+  whatsappText,
   settings,
   className,
   tone = "cream",
 }: CtaBandProps) {
-  const s = settings ?? (await getSiteSettings());
+  const [s, locale] = await Promise.all([
+    settings ? Promise.resolve(settings) : getSiteSettings(),
+    getLocale(),
+  ]);
   const wa = s.whatsapp ?? process.env.NEXT_PUBLIC_WHATSAPP_PHONE ?? "";
+
+  const eyebrowText = eyebrow ?? t(locale, "cta.eyebrow");
+  const titleText = title ?? t(locale, "cta.title");
+  const bodyText = text ?? t(locale, "cta.text");
+  const waMessage = whatsappText ?? t(locale, "cta.whatsappText");
 
   return (
     <section
@@ -44,23 +56,23 @@ export async function CtaBand({
     >
       <Container size="narrow">
         <Reveal className="flex flex-col items-center gap-6 text-center">
-          <span className="u-label text-rose">{eyebrow}</span>
+          <span className="u-label text-rose">{eyebrowText}</span>
           <h2 className="font-display text-3xl text-ink sm:text-4xl md:text-5xl">
-            {title}
+            {titleText}
           </h2>
-          <p className="max-w-xl text-muted leading-relaxed">{text}</p>
+          <p className="max-w-xl text-muted leading-relaxed">{bodyText}</p>
           <div className="mt-2 flex flex-col items-center gap-3 sm:flex-row">
             <ButtonLink href="/randevu" variant="primary">
-              Randevu Al
+              {t(locale, "cta.primaryButton")}
             </ButtonLink>
             {wa ? (
               <ButtonLink
-                href={waLink(wa, whatsappText)}
+                href={waLink(wa, waMessage)}
                 variant="outline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                WhatsApp
+                {t(locale, "cta.whatsappButton")}
               </ButtonLink>
             ) : null}
           </div>

@@ -1,43 +1,45 @@
 import type { SiteSettings } from "@/lib/types";
+import { t, type Locale } from "@/lib/i18n/config";
 import { telLink, waLink } from "@/lib/utils";
 
-// Atölye bilgi kartı (sağ kolon). Salt gösterim — server component olabilir.
-// SiteSettings'ten adres / telefon / WhatsApp; çalışma saatleri statik.
-
-const HOURS: Array<{ day: string; time: string }> = [
-  { day: "Pazartesi – Cuma", time: "10:00 – 19:00" },
-  { day: "Cumartesi", time: "10:00 – 18:00" },
-  { day: "Pazar", time: "Randevu ile" },
-];
+// Atölye bilgi kartı (sağ kolon). SiteSettings'ten adres/telefon/WhatsApp;
+// etiketler ve çalışma saatleri aktif dile göre çevrilir.
 
 type Props = {
   settings: SiteSettings;
+  locale: Locale;
 };
 
-export function AtelierInfo({ settings }: Props) {
+export function AtelierInfo({ settings, locale }: Props) {
   const phone = settings.phone ?? null;
   const wa = settings.whatsapp ?? process.env.NEXT_PUBLIC_WHATSAPP_PHONE ?? null;
-  const address = settings.address ?? "Maltepe, İstanbul";
+  const address =
+    settings.address ??
+    "İdealtepe Mah. Panorama Sok. Defne Apt. No:5 D:7, Maltepe / İstanbul";
   const tel = telLink(phone);
-  const waText = "Merhaba, Celine Gelinlik için randevu almak istiyorum.";
+  const waText = t(locale, "cta.whatsappText");
+
+  const hours: Array<{ day: string; time: string }> = [
+    { day: t(locale, "hours.weekdays"), time: "10:00 – 19:00" },
+    { day: t(locale, "hours.saturday"), time: "10:00 – 18:00" },
+    { day: t(locale, "hours.sunday"), time: t(locale, "hours.byAppointment") },
+  ];
 
   return (
     <aside className="flex flex-col gap-8 border border-rose-soft bg-cream p-8 sm:p-10">
       <div className="flex flex-col gap-3">
-        <span className="u-label text-rose">Atölye</span>
+        <span className="u-label text-rose">{t(locale, "atelier.eyebrow")}</span>
         <h3 className="font-display text-2xl text-ink sm:text-3xl">
           Celine Gelinlik
         </h3>
         <p className="text-sm text-muted leading-relaxed">
-          Sizi atölyemizde ağırlamayı, hikâyenizi dinlemeyi ve size özel
-          tasarım yolculuğuna birlikte başlamayı çok isteriz.
+          {t(locale, "atelier.intro")}
         </p>
       </div>
 
       <div className="h-px w-full bg-rose-soft" aria-hidden />
 
-      {/* Adres */}
-      <InfoRow label="Adres">
+      <InfoRow label={t(locale, "label.address")}>
         {settings.mapUrl ? (
           <a
             href={settings.mapUrl}
@@ -52,9 +54,8 @@ export function AtelierInfo({ settings }: Props) {
         )}
       </InfoRow>
 
-      {/* Telefon */}
       {phone ? (
-        <InfoRow label="Telefon">
+        <InfoRow label={t(locale, "label.phone")}>
           <a
             href={tel ?? "#"}
             className="text-ink underline-offset-4 transition-colors hover:text-rose hover:underline"
@@ -64,24 +65,22 @@ export function AtelierInfo({ settings }: Props) {
         </InfoRow>
       ) : null}
 
-      {/* WhatsApp */}
       {wa ? (
-        <InfoRow label="WhatsApp">
+        <InfoRow label={t(locale, "label.whatsapp")}>
           <a
             href={waLink(wa, waText)}
             target="_blank"
             rel="noopener noreferrer"
             className="text-ink underline-offset-4 transition-colors hover:text-rose hover:underline"
           >
-            Mesaj gönder
+            {t(locale, "atelier.waLink")}
           </a>
         </InfoRow>
       ) : null}
 
-      {/* Çalışma saatleri */}
-      <InfoRow label="Çalışma Saatleri">
+      <InfoRow label={t(locale, "label.hours")}>
         <ul className="flex flex-col gap-1.5">
-          {HOURS.map((h) => (
+          {hours.map((h) => (
             <li
               key={h.day}
               className="flex items-baseline justify-between gap-6 text-ink"

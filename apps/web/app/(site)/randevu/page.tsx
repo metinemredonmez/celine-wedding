@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
 import { getSiteSettings } from "@/lib/api";
+import { getLocale } from "@/lib/i18n";
+import { t } from "@/lib/i18n/config";
 import { Container } from "@/components/site/Container";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Reveal } from "@/components/motion/Reveal";
@@ -16,16 +18,16 @@ export const metadata: Metadata = {
 };
 
 export default async function RandevuPage() {
-  const settings = await getSiteSettings();
+  const [settings, locale] = await Promise.all([getSiteSettings(), getLocale()]);
 
   return (
     <div className="bg-powder">
       <Container className="py-20 sm:py-28">
         <Reveal>
           <SectionHeading
-            eyebrow="Randevu"
-            title="Atölyede Buluşalım"
-            subtitle="Size özel gelinlik yolculuğu birebir bir görüşmeyle başlar. Aşağıdaki formu doldurun; uygun bir gün ve saat için sizi arayarak randevunuzu teyit edelim."
+            eyebrow={t(locale, "randevu.eyebrow")}
+            title={t(locale, "randevu.title")}
+            subtitle={t(locale, "randevu.subtitle")}
             align="center"
             size="lg"
           />
@@ -34,12 +36,12 @@ export default async function RandevuPage() {
         <div className="mt-16 grid grid-cols-1 gap-8 lg:grid-cols-[1.35fr_1fr] lg:gap-12">
           {/* Sol: form */}
           <Reveal>
-            <AppointmentForm settings={settings} />
+            <AppointmentForm settings={settings} locale={locale} />
           </Reveal>
 
           {/* Sağ: atölye bilgi kartı */}
           <Reveal delay={0.1}>
-            <AtelierInfo settings={settings} />
+            <AtelierInfo settings={settings} locale={locale} />
           </Reveal>
         </div>
       </Container>

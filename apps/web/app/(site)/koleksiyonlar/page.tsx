@@ -188,13 +188,7 @@ export default async function KoleksiyonlarPage() {
         </section>
       )}
 
-      <CtaBand
-        tone="cream"
-        eyebrow="Randevu"
-        title="Sizi anlatan gelinliği birlikte seçelim"
-        text="Beğendiğiniz koleksiyonu atölyemizde birebir deneyimlemek ve size özel yorumlamak için randevu oluşturun."
-        whatsappText="Merhaba, koleksiyonlarınız için randevu almak istiyorum."
-      />
+      <CtaBand tone="cream" />
     </>
   );
 }

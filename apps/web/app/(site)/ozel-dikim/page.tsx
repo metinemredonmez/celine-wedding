@@ -151,12 +151,7 @@ export default async function OzelDikimPage() {
         </Container>
       </section>
 
-      <CtaBand
-        tone="cream"
-        title="Hikâyenizi birlikte dikelim"
-        text="Özel dikim yolculuğunuz bir sohbetle başlar. Atölyemizde tanışmak ve size özel gelinliğinizin ilk adımını atmak için randevu oluşturun."
-        whatsappText="Merhaba, özel dikim gelinlik için randevu almak istiyorum."
-      />
+      <CtaBand tone="cream" />
     </>
   );
 }
