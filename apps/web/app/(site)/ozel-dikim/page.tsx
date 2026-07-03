@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { getContent } from "@/lib/api";
+import { c } from "@/lib/content";
 import { Container } from "@/components/site/Container";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Media } from "@/components/site/Media";
@@ -6,7 +8,6 @@ import { CtaBand } from "@/components/site/CtaBand";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
 import { Parallax } from "@/components/motion/Parallax";
-import { BESPOKE_IMAGE } from "@/lib/gallery";
 
 export const metadata: Metadata = {
   title: "Özel Dikim",
@@ -14,41 +15,16 @@ export const metadata: Metadata = {
     "Celine Gelinlik'te ölçüye özel couture süreci: istişare, tasarım ve eskiz, provalar, dikim ve teslim. Size özel, tek bir gelinlik.",
 };
 
-type ProcessStep = {
-  step: string;
-  title: string;
-  duration: string;
-  text: string;
-};
+export default async function OzelDikimPage() {
+  const content = await getContent();
 
-const STEPS: ProcessStep[] = [
-  {
-    step: "01",
-    title: "İstişare",
-    duration: "İlk buluşma",
-    text: "Atölyemizde birebir tanışıyoruz. Hayalinizdeki silueti, düğün konseptinizi ve size en yakışan kumaşları konuşuyor; vücut tipiniz ve tarzınız üzerine sakin bir sohbetle yolculuğun tonunu belirliyoruz.",
-  },
-  {
-    step: "02",
-    title: "Tasarım & Eskiz",
-    duration: "2–4 hafta",
-    text: "Sizin için özgün bir tasarım çiziyoruz. Eskizler, kumaş ve dantel numuneleri, boncuk ve işleme detayları üzerinde birlikte karar veriyoruz. Her çizgi yalnızca sizin gelinliğiniz için düşünülüyor.",
-  },
-  {
-    step: "03",
-    title: "Provalar",
-    duration: "Birkaç prova",
-    text: "Kalıbınız sıfırdan, ölçünüze göre çıkarılıyor. Ardışık provalarla duruş, kumaşın akışı ve her dikiş milimetrik olarak size uyarlanıyor. Bedeninizde kusursuz oturana kadar birlikte çalışıyoruz.",
-  },
-  {
-    step: "04",
-    title: "Dikim & Teslim",
-    duration: "Son rötuşlar",
-    text: "El emeği işlemeler, son ütü ve dikkatli bir kalite kontrolünün ardından gelinliğiniz teslime hazır. Düğün gününüzde tek ve size özel bir eserle salona adım atıyorsunuz.",
-  },
-];
+  const steps = [1, 2, 3, 4].map((n) => ({
+    step: `0${n}`,
+    title: c(content, `ozeldikim.step${n}.title`),
+    duration: c(content, `ozeldikim.step${n}.duration`),
+    text: c(content, `ozeldikim.step${n}.text`),
+  }));
 
-export default function OzelDikimPage() {
   return (
     <>
       {/* Giriş */}
@@ -59,20 +35,20 @@ export default function OzelDikimPage() {
               <SectionHeading
                 align="left"
                 size="lg"
-                eyebrow="Özel Dikim"
-                title="Yalnızca size ait, ölçüye özel bir gelinlik"
-                subtitle="Celine Gelinlik'te her gelinlik sıfırdan, size özel tasarlanır ve elde dikilir. Hazır bir kalıp değil; sizin hikâyenizden, siluetinizden ve kumaşınızdan doğan tek bir eser."
+                eyebrow={c(content, "ozeldikim.eyebrow")}
+                title={c(content, "ozeldikim.title")}
+                subtitle={c(content, "ozeldikim.subtitle")}
               />
               <div className="mt-8">
                 <ButtonLink href="/randevu" variant="primary">
-                  Randevu Al
+                  {c(content, "ozeldikim.cta")}
                 </ButtonLink>
               </div>
             </Reveal>
 
             <Reveal delay={0.15}>
               <Media
-                src={BESPOKE_IMAGE}
+                src={c(content, "ozeldikim.image")}
                 alt="Özel dikim — saten ve el işi dantel detayı"
                 ratio="portrait"
                 position="center"
@@ -87,14 +63,14 @@ export default function OzelDikimPage() {
         <Container>
           <Reveal>
             <SectionHeading
-              eyebrow="Süreç"
-              title="Dört adımda couture yolculuğu"
-              subtitle="İlk sohbetten teslim gününe kadar her aşamada yanınızdayız. Acele etmeden, hakkını vererek."
+              eyebrow={c(content, "ozeldikim.processEyebrow")}
+              title={c(content, "ozeldikim.processTitle")}
+              subtitle={c(content, "ozeldikim.processSubtitle")}
             />
           </Reveal>
 
           <ol className="mt-16 grid gap-px overflow-hidden border-y border-rose-soft sm:grid-cols-2">
-            {STEPS.map((s, i) => (
+            {steps.map((s, i) => (
               <Reveal
                 as="li"
                 key={s.step}
@@ -122,36 +98,33 @@ export default function OzelDikimPage() {
         <Container size="narrow">
           <div className="grid gap-12 sm:grid-cols-2">
             <Reveal className="flex flex-col gap-3">
-              <span className="u-label text-rose">Zaman planı</span>
+              <span className="u-label text-rose">
+                {c(content, "ozeldikim.timeEyebrow")}
+              </span>
               <h3 className="font-display text-2xl text-ink sm:text-3xl">
-                Yaklaşık 6–12 ay
+                {c(content, "ozeldikim.timeTitle")}
               </h3>
               <p className="text-muted leading-relaxed">
-                Ölçüye özel bir gelinlik zaman ister. İdeal olarak düğününüzden
-                6 ila 12 ay önce sürece başlamanızı öneririz; böylece tasarım,
-                provalar ve el işçiliği için gereken zaman rahatça açılır. Daha
-                kısa süreler için lütfen bizimle görüşün, birlikte
-                değerlendirelim.
+                {c(content, "ozeldikim.timeText")}
               </p>
             </Reveal>
 
             <Reveal delay={0.1} className="flex flex-col gap-3">
-              <span className="u-label text-rose">Şehir dışı gelinler</span>
+              <span className="u-label text-rose">
+                {c(content, "ozeldikim.remoteEyebrow")}
+              </span>
               <h3 className="font-display text-2xl text-ink sm:text-3xl">
-                Uzaktan da yanınızdayız
+                {c(content, "ozeldikim.remoteTitle")}
               </h3>
               <p className="text-muted leading-relaxed">
-                İstanbul dışında yaşıyorsanız süreci sizin için kolaylaştırıyoruz.
-                İlk istişareyi ve ara görüşmeleri video ile yapabilir, provaları
-                birkaç ziyarete toplayabiliriz. Randevu oluştururken şehir dışında
-                olduğunuzu belirtmeniz yeterli.
+                {c(content, "ozeldikim.remoteText")}
               </p>
             </Reveal>
           </div>
         </Container>
       </section>
 
-      {/* Sinematik parallax bandı — kaydırırken görsel yavaşça kayar */}
+      {/* Sinematik parallax bandı */}
       <section className="relative h-[62vh] min-h-[420px] overflow-hidden bg-ink sm:h-[74vh]">
         <Parallax
           distance={70}
@@ -159,7 +132,7 @@ export default function OzelDikimPage() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/gelinlikler/m01-7.jpg"
+            src={c(content, "ozeldikim.bandImage")}
             alt=""
             className="h-full w-full object-cover"
           />
@@ -172,7 +145,7 @@ export default function OzelDikimPage() {
           <Reveal className="flex flex-col items-center gap-5">
             <span className="u-label text-cream/80">El emeği</span>
             <p className="font-display max-w-2xl text-2xl leading-[1.25] text-cream sm:text-3xl md:text-[2.5rem]">
-              Her ilmek sabırla atılır; her gelinlik, tek bir hikâye için.
+              {c(content, "ozeldikim.bandLine")}
             </p>
           </Reveal>
         </Container>

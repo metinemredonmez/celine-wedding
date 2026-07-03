@@ -94,6 +94,46 @@ export const CONTENT_REGISTRY: ContentField[] = [
   { key: "iletisim.subtitle", group: "İletişim Sayfası", type: "textarea", label: "Alt metin", default: "Atölyemizde birebir görüşme, sorularınız ve randevu talepleriniz için size en kısa sürede dönüş yapmaktan mutluluk duyarız." },
   { key: "iletisim.hoursTitle", group: "İletişim Sayfası", type: "text", label: "Saatler başlığı", default: "Çalışma Saatleri" },
   { key: "iletisim.hours", group: "İletişim Sayfası", type: "textarea", label: "Çalışma saatleri", hint: "Her satır: Gün | Saat", default: "Pazartesi – Cuma | 10.00 – 19.00\nCumartesi | 10.00 – 18.00\nPazar | Randevu ile" },
+
+  // ── Alt bilgi (footer) ──
+  { key: "footer.tagline", group: "Alt Bilgi (Footer)", type: "textarea", label: "Marka sloganı", default: "Seda Dönmez Couture — kişiye özel, ölçüye özel gelinlik tasarımı. Her gelin için tek ve eşsiz." },
+
+  // ── Gerçek Gelinler sayfası ──
+  { key: "gercek.eyebrow", group: "Gerçek Gelinler Sayfası", type: "text", label: "Üst etiket", default: "Gerçek Gelinler" },
+  { key: "gercek.title", group: "Gerçek Gelinler Sayfası", type: "text", label: "Başlık", default: "Kendi hikâyesini yaşayan gelinler" },
+  { key: "gercek.subtitle", group: "Gerçek Gelinler Sayfası", type: "textarea", label: "Alt metin", default: "Celine gelinliklerini giyen gelinlerimizin düğün günü kareleri ve kelimeleri. Bu galeriyi zamanla, gerçek gelinlerimizin anılarıyla dolduruyoruz." },
+  { key: "gercek.soonLabel", group: "Gerçek Gelinler Sayfası", type: "text", label: "Yakında etiketi", default: "Yakında" },
+  { key: "gercek.soonText", group: "Gerçek Gelinler Sayfası", type: "textarea", label: "Yakında metni", default: "Gelinlerimizin gerçek düğün fotoğraflarını ve hikâyelerini paylaşmak için sabırsızlanıyoruz. Yakında bu sayfa, size ilham verecek gerçek anılarla dolacak." },
+
+  // ── Özel Dikim sayfası ──
+  { key: "ozeldikim.eyebrow", group: "Özel Dikim Sayfası", type: "text", label: "Üst etiket", default: "Özel Dikim" },
+  { key: "ozeldikim.title", group: "Özel Dikim Sayfası", type: "text", label: "Başlık", default: "Yalnızca size ait, ölçüye özel bir gelinlik" },
+  { key: "ozeldikim.subtitle", group: "Özel Dikim Sayfası", type: "textarea", label: "Alt metin", default: "Celine Gelinlik'te her gelinlik sıfırdan, size özel tasarlanır ve elde dikilir. Hazır bir kalıp değil; sizin hikâyenizden, siluetinizden ve kumaşınızdan doğan tek bir eser." },
+  { key: "ozeldikim.cta", group: "Özel Dikim Sayfası", type: "text", label: "Buton", default: "Randevu Al" },
+  { key: "ozeldikim.image", group: "Özel Dikim Sayfası", type: "image", label: "Giriş görseli", default: "/gelinlikler/m07-1.jpg" },
+  { key: "ozeldikim.processEyebrow", group: "Özel Dikim Sayfası", type: "text", label: "Süreç üst etiketi", default: "Süreç" },
+  { key: "ozeldikim.processTitle", group: "Özel Dikim Sayfası", type: "text", label: "Süreç başlığı", default: "Dört adımda couture yolculuğu" },
+  { key: "ozeldikim.processSubtitle", group: "Özel Dikim Sayfası", type: "textarea", label: "Süreç alt metni", default: "İlk sohbetten teslim gününe kadar her aşamada yanınızdayız. Acele etmeden, hakkını vererek." },
+  { key: "ozeldikim.step1.title", group: "Özel Dikim Sayfası", type: "text", label: "1. adım başlık", default: "İstişare" },
+  { key: "ozeldikim.step1.duration", group: "Özel Dikim Sayfası", type: "text", label: "1. adım süre", default: "İlk buluşma" },
+  { key: "ozeldikim.step1.text", group: "Özel Dikim Sayfası", type: "textarea", label: "1. adım metin", default: "Atölyemizde birebir tanışıyoruz. Hayalinizdeki silueti, düğün konseptinizi ve size en yakışan kumaşları konuşuyor; vücut tipiniz ve tarzınız üzerine sakin bir sohbetle yolculuğun tonunu belirliyoruz." },
+  { key: "ozeldikim.step2.title", group: "Özel Dikim Sayfası", type: "text", label: "2. adım başlık", default: "Tasarım & Eskiz" },
+  { key: "ozeldikim.step2.duration", group: "Özel Dikim Sayfası", type: "text", label: "2. adım süre", default: "2–4 hafta" },
+  { key: "ozeldikim.step2.text", group: "Özel Dikim Sayfası", type: "textarea", label: "2. adım metin", default: "Sizin için özgün bir tasarım çiziyoruz. Eskizler, kumaş ve dantel numuneleri, boncuk ve işleme detayları üzerinde birlikte karar veriyoruz. Her çizgi yalnızca sizin gelinliğiniz için düşünülüyor." },
+  { key: "ozeldikim.step3.title", group: "Özel Dikim Sayfası", type: "text", label: "3. adım başlık", default: "Provalar" },
+  { key: "ozeldikim.step3.duration", group: "Özel Dikim Sayfası", type: "text", label: "3. adım süre", default: "Birkaç prova" },
+  { key: "ozeldikim.step3.text", group: "Özel Dikim Sayfası", type: "textarea", label: "3. adım metin", default: "Kalıbınız sıfırdan, ölçünüze göre çıkarılıyor. Ardışık provalarla duruş, kumaşın akışı ve her dikiş milimetrik olarak size uyarlanıyor. Bedeninizde kusursuz oturana kadar birlikte çalışıyoruz." },
+  { key: "ozeldikim.step4.title", group: "Özel Dikim Sayfası", type: "text", label: "4. adım başlık", default: "Dikim & Teslim" },
+  { key: "ozeldikim.step4.duration", group: "Özel Dikim Sayfası", type: "text", label: "4. adım süre", default: "Son rötuşlar" },
+  { key: "ozeldikim.step4.text", group: "Özel Dikim Sayfası", type: "textarea", label: "4. adım metin", default: "El emeği işlemeler, son ütü ve dikkatli bir kalite kontrolünün ardından gelinliğiniz teslime hazır. Düğün gününüzde tek ve size özel bir eserle salona adım atıyorsunuz." },
+  { key: "ozeldikim.timeEyebrow", group: "Özel Dikim Sayfası", type: "text", label: "Zaman üst etiketi", default: "Zaman planı" },
+  { key: "ozeldikim.timeTitle", group: "Özel Dikim Sayfası", type: "text", label: "Zaman başlığı", default: "Yaklaşık 6–12 ay" },
+  { key: "ozeldikim.timeText", group: "Özel Dikim Sayfası", type: "textarea", label: "Zaman metni", default: "Ölçüye özel bir gelinlik zaman ister. İdeal olarak düğününüzden 6 ila 12 ay önce sürece başlamanızı öneririz; böylece tasarım, provalar ve el işçiliği için gereken zaman rahatça açılır. Daha kısa süreler için lütfen bizimle görüşün, birlikte değerlendirelim." },
+  { key: "ozeldikim.remoteEyebrow", group: "Özel Dikim Sayfası", type: "text", label: "Şehir dışı üst etiketi", default: "Şehir dışı gelinler" },
+  { key: "ozeldikim.remoteTitle", group: "Özel Dikim Sayfası", type: "text", label: "Şehir dışı başlığı", default: "Uzaktan da yanınızdayız" },
+  { key: "ozeldikim.remoteText", group: "Özel Dikim Sayfası", type: "textarea", label: "Şehir dışı metni", default: "İstanbul dışında yaşıyorsanız süreci sizin için kolaylaştırıyoruz. İlk istişareyi ve ara görüşmeleri video ile yapabilir, provaları birkaç ziyarete toplayabiliriz. Randevu oluştururken şehir dışında olduğunuzu belirtmeniz yeterli." },
+  { key: "ozeldikim.bandImage", group: "Özel Dikim Sayfası", type: "image", label: "Parallax bant görseli", default: "/gelinlikler/m01-7.jpg" },
+  { key: "ozeldikim.bandLine", group: "Özel Dikim Sayfası", type: "textarea", label: "Parallax bant cümlesi", default: "Her ilmek sabırla atılır; her gelinlik, tek bir hikâye için." },
 ];
 
 /** Anahtar → varsayılan değer haritası (kayıt yoksa buradan). */

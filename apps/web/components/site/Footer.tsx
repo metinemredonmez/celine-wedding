@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getSiteSettings } from "@/lib/api";
+import { getContent, getSiteSettings } from "@/lib/api";
+import { c } from "@/lib/content";
 import { NAV_ITEMS } from "@/lib/nav";
 import { instagramLink, telLink, waLink } from "@/lib/utils";
 import { Container } from "./Container";
@@ -9,7 +10,7 @@ import { Container } from "./Container";
  * Server component; SiteSettings'ten iletişim bilgilerini çeker.
  */
 export async function Footer() {
-  const s = await getSiteSettings();
+  const [s, content] = await Promise.all([getSiteSettings(), getContent()]);
   const wa = s.whatsapp ?? process.env.NEXT_PUBLIC_WHATSAPP_PHONE ?? "";
   const ig = instagramLink(s.instagram ?? process.env.NEXT_PUBLIC_INSTAGRAM);
   const tel = telLink(s.phone);
@@ -23,8 +24,7 @@ export async function Footer() {
           <div className="flex flex-col gap-4 lg:col-span-1">
             <span className="u-wordmark text-lg text-ink">CELINE</span>
             <p className="max-w-xs text-sm leading-relaxed text-muted">
-              Seda Dönmez Couture — kişiye özel, ölçüye özel gelinlik tasarımı.
-              Her gelin için tek ve eşsiz.
+              {c(content, "footer.tagline")}
             </p>
             {s.address ? (
               <p className="text-sm leading-relaxed text-faint">{s.address}</p>

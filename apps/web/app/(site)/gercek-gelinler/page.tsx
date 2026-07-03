@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { getContent } from "@/lib/api";
+import { c } from "@/lib/content";
 import { Container } from "@/components/site/Container";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Media } from "@/components/site/Media";
@@ -74,7 +76,9 @@ const STORIES: BrideStory[] = [
   },
 ];
 
-export default function GercekGelinlerPage() {
+export default async function GercekGelinlerPage() {
+  const content = await getContent();
+
   return (
     <>
       {/* Giriş */}
@@ -83,9 +87,9 @@ export default function GercekGelinlerPage() {
           <Reveal>
             <SectionHeading
               size="lg"
-              eyebrow="Gerçek Gelinler"
-              title="Kendi hikâyesini yaşayan gelinler"
-              subtitle="Celine gelinliklerini giyen gelinlerimizin düğün günü kareleri ve kelimeleri. Bu galeriyi zamanla, gerçek gelinlerimizin anılarıyla dolduruyoruz."
+              eyebrow={c(content, "gercek.eyebrow")}
+              title={c(content, "gercek.title")}
+              subtitle={c(content, "gercek.subtitle")}
             />
           </Reveal>
         </Container>
@@ -125,11 +129,11 @@ export default function GercekGelinlerPage() {
           {/* Yakında notu */}
           <Reveal delay={0.1}>
             <div className="mt-16 border-t border-rose-soft pt-10 text-center">
-              <p className="u-label text-faint">Yakında</p>
+              <p className="u-label text-faint">
+                {c(content, "gercek.soonLabel")}
+              </p>
               <p className="mx-auto mt-4 max-w-xl text-muted leading-relaxed">
-                Gelinlerimizin gerçek düğün fotoğraflarını ve hikâyelerini
-                paylaşmak için sabırsızlanıyoruz. Yakında bu sayfa, size ilham
-                verecek gerçek anılarla dolacak.
+                {c(content, "gercek.soonText")}
               </p>
             </div>
           </Reveal>
