@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getCollection } from "@/lib/api";
+import { getCollection, getCollections } from "@/lib/api";
 import { Container } from "@/components/site/Container";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Media } from "@/components/site/Media";
@@ -42,13 +42,17 @@ export async function generateMetadata({
 // generateStaticParams gerekmez — dinamik render + ISR (lib/api revalidate).
 export default async function KoleksiyonDetayPage({ params }: PageProps) {
   const { slug } = await params;
-  const collection = await getCollection(slug);
+  const [collection, allCollections] = await Promise.all([
+    getCollection(slug),
+    getCollections(),
+  ]);
 
   if (!collection) {
     notFound();
   }
 
   const dresses = collection.dresses ?? [];
+  const others = allCollections.filter((col) => col.slug !== slug);
 
   return (
     <>
@@ -91,7 +95,7 @@ export default async function KoleksiyonDetayPage({ params }: PageProps) {
         <Container>
           <Reveal>
             <SectionHeading
-              eyebrow="Modeller"
+              eyebrow={dresses.length > 0 ? `${dresses.length} Model` : "Modeller"}
               title="Bu koleksiyondan"
               subtitle={
                 dresses.length > 0
@@ -125,6 +129,34 @@ export default async function KoleksiyonDetayPage({ params }: PageProps) {
           )}
         </Container>
       </section>
+
+      {/* Diğer koleksiyonlar — editoryal geçiş */}
+      {others.length > 0 ? (
+        <section className="border-t border-rose-soft bg-powder py-14 sm:py-20">
+          <Container>
+            <Reveal className="flex flex-col items-center gap-6 text-center">
+              <span className="u-label text-rose">Diğer koleksiyonlar</span>
+              <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+                {others.map((col) => (
+                  <Link
+                    key={col.id}
+                    href={`/koleksiyonlar/${col.slug}`}
+                    className="group inline-flex items-center gap-2 font-display text-2xl text-ink transition-colors hover:text-rose sm:text-3xl"
+                  >
+                    {col.name}
+                    <span
+                      aria-hidden
+                      className="text-lg text-faint transition-transform duration-300 group-hover:translate-x-1 group-hover:text-rose"
+                    >
+                      →
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </Reveal>
+          </Container>
+        </section>
+      ) : null}
 
       <CtaBand tone="cream" />
     </>
