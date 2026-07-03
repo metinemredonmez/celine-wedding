@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getCollections, getDresses } from "@/lib/api";
+import { getLocale } from "@/lib/i18n";
+import { t } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/site/Container";
 import { SectionHeading } from "@/components/site/SectionHeading";
@@ -23,9 +25,10 @@ export default async function ModellerPage({ searchParams }: PageProps) {
   const { koleksiyon } = await searchParams;
   const activeCollection = koleksiyon?.trim() || undefined;
 
-  const [collections, page] = await Promise.all([
+  const [collections, page, locale] = await Promise.all([
     getCollections(),
     getDresses({ collection: activeCollection, limit: 24 }),
+    getLocale(),
   ]);
 
   const dresses = page.data;
@@ -36,9 +39,9 @@ export default async function ModellerPage({ searchParams }: PageProps) {
         <Container>
           <Reveal>
             <SectionHeading
-              eyebrow="Modeller"
-              title="Gelinlikler"
-              subtitle="Her biri ölçüye özel yeniden yorumlanan couture tasarımlar. Beğendiğiniz modeli atölyemizde birebir deneyimlemek için randevu oluşturabilirsiniz."
+              eyebrow={t(locale, "modeller.eyebrow")}
+              title={t(locale, "modeller.title")}
+              subtitle={t(locale, "modeller.subtitle")}
               size="lg"
             />
           </Reveal>
@@ -51,7 +54,7 @@ export default async function ModellerPage({ searchParams }: PageProps) {
               className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3"
             >
               <FilterChip href="/modeller" active={!activeCollection}>
-                Tümü
+                {t(locale, "modeller.filterAll")}
               </FilterChip>
               {collections.map((c) => (
                 <FilterChip
@@ -80,19 +83,17 @@ export default async function ModellerPage({ searchParams }: PageProps) {
           ) : (
             <Reveal className="mx-auto max-w-xl py-16 text-center">
               <p className="font-display text-2xl text-ink">
-                Bu seçim için henüz model eklenmedi.
+                {t(locale, "modeller.empty.title")}
               </p>
               <p className="mt-4 text-muted leading-relaxed">
-                Yeni modellerimiz atölyede hazırlanıyor. Dilerseniz tüm
-                koleksiyonu görüntüleyebilir ya da bir randevu oluşturarak
-                birebir görüşebilirsiniz.
+                {t(locale, "modeller.empty.body")}
               </p>
               {activeCollection ? (
                 <Link
                   href="/modeller"
                   className="u-label mt-6 inline-block text-rose transition-colors hover:text-ink"
                 >
-                  Tüm gelinlikler
+                  {t(locale, "modeller.empty.viewAll")}
                 </Link>
               ) : null}
             </Reveal>
@@ -100,10 +101,7 @@ export default async function ModellerPage({ searchParams }: PageProps) {
         </Container>
       </section>
 
-      <CtaBand
-        title="Beğendiğiniz gelinliği yakından görün"
-        text="Modellerimizi atölyemizde birebir deneyimlemek, ölçüye özel uyarlamayı konuşmak için randevu oluşturun."
-      />
+      <CtaBand />
     </>
   );
 }

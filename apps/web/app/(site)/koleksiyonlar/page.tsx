@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getCollections } from "@/lib/api";
+import { getLocale } from "@/lib/i18n";
+import { t } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/site/Container";
 import { SectionHeading } from "@/components/site/SectionHeading";
@@ -17,15 +19,15 @@ export const metadata: Metadata = {
 
 const ROMAN = ["I", "II", "III", "IV", "V", "VI"];
 
-// description boşsa kullanılacak şiirsel yedek anlatı.
-const FALLBACK_DESC: Record<string, string> = {
-  dantel: "El işi dantelin sabırla dokunduğu, zamansız bir romantizm.",
-  saten: "Işığı taşıyan saten; sade, güçlü ve kendinden emin.",
-  modern: "Net çizgiler ve çağdaş siluet — bugünün gelini için.",
-};
-
 export default async function KoleksiyonlarPage() {
-  const collections = await getCollections();
+  const [collections, locale] = await Promise.all([getCollections(), getLocale()]);
+
+  // description boşsa: o dilde şiirsel yedek anlatı (dantel/saten/modern).
+  const fallbackDesc = (slug: string): string => {
+    const key = `koleksiyon.fallback.${slug}`;
+    const v = t(locale, key);
+    return v === key ? "" : v;
+  };
 
   return (
     <>
@@ -34,13 +36,15 @@ export default async function KoleksiyonlarPage() {
         <Container>
           <Reveal className="flex flex-col items-center gap-6 text-center">
             <SectionHeading
-              eyebrow="Koleksiyonlar"
-              title="Her koleksiyon, bir hikâye"
+              eyebrow={t(locale, "home.collections.eyebrow")}
+              title={t(locale, "koleksiyon.title")}
               align="center"
               size="lg"
             />
             <span aria-hidden className="block h-px w-16 bg-rose/40" />
-            <p className="u-label text-faint">Atölyemizde, ölçüye özel dikilir</p>
+            <p className="u-label text-faint">
+              {t(locale, "koleksiyon.craftLine")}
+            </p>
           </Reveal>
 
           {/* Bölüm index / atlama satırı */}
@@ -81,7 +85,7 @@ export default async function KoleksiyonlarPage() {
           {collections.map((col, i) => {
             const reversed = i % 2 === 1;
             const roman = ROMAN[i] ?? String(i + 1);
-            const desc = col.description?.trim() || FALLBACK_DESC[col.slug] || "";
+            const desc = col.description?.trim() || fallbackDesc(col.slug);
             return (
               <section
                 key={col.id}
@@ -133,7 +137,9 @@ export default async function KoleksiyonlarPage() {
                         >
                           {roman}
                         </span>
-                        <span className="u-label text-rose">Koleksiyon</span>
+                        <span className="u-label text-rose">
+                          {t(locale, "koleksiyon.sceneEyebrow")}
+                        </span>
                       </div>
                       <h2
                         id={`col-${col.slug}`}
@@ -153,7 +159,7 @@ export default async function KoleksiyonlarPage() {
                         href={`/koleksiyonlar/${col.slug}`}
                         className="group/cta u-label mt-2 inline-flex items-center gap-2 text-faint transition-colors hover:text-rose"
                       >
-                        Koleksiyonu keşfet
+                        {t(locale, "koleksiyon.exploreCta")}
                         <span
                           aria-hidden
                           className="transition-transform duration-300 group-hover/cta:translate-x-1"

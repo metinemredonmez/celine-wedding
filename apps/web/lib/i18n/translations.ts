@@ -190,4 +190,21 @@ export const TRANSLATIONS: Record<string, Record<Locale, string>> = {
   "hours.saturday": { tr: "Cumartesi", en: "Saturday", ar: "السبت", ru: "Суббота" },
   "hours.sunday": { tr: "Pazar", en: "Sunday", ar: "الأحد", ru: "Воскресенье" },
   "hours.byAppointment": { tr: "Randevu ile", en: "By appointment", ar: "بموعد مسبق", ru: "По записи" },
+
+  "modeller.eyebrow": { tr: "Modeller", en: "Gowns", ar: "الفساتين", ru: "Модели" },
+  "modeller.title": { tr: "Gelinlikler", en: "Bridal Gowns", ar: "فساتين الزفاف", ru: "Свадебные платья" },
+  "modeller.subtitle": { tr: "Her biri ölçüye özel yeniden yorumlanan couture tasarımlar. Beğendiğiniz modeli atölyemizde birebir deneyimlemek için randevu oluşturabilirsiniz.", en: "Couture designs, each reinterpreted made-to-measure. Book an appointment to experience the gown you love in our atelier.", ar: "تصاميم كوتور، كلٌّ منها يُعاد ابتكاره على المقاس. احجزي موعدًا لتجربة الفستان الذي يعجبكِ في مشغلنا.", ru: "Модели couture, каждая заново переосмыслена по вашим меркам. Запишитесь на приём, чтобы примерить понравившееся платье в нашем ателье." },
+  "modeller.filterAll": { tr: "Tümü", en: "All", ar: "الكل", ru: "Все" },
+  "modeller.empty.title": { tr: "Bu seçim için henüz model eklenmedi.", en: "No gowns have been added for this selection yet.", ar: "لم تُضَف فساتين لهذا الاختيار بعد.", ru: "Для этого выбора пока нет платьев." },
+  "modeller.empty.body": { tr: "Yeni modellerimiz atölyede hazırlanıyor. Dilerseniz tüm koleksiyonu görüntüleyebilir ya da bir randevu oluşturarak birebir görüşebilirsiniz.", en: "New gowns are being prepared in the atelier. You can view the full collection or book an appointment for a one-to-one meeting.", ar: "تُحضَّر فساتيننا الجديدة في المشغل. يمكنك استعراض المجموعة كاملة أو حجز موعد للقاء شخصي.", ru: "Новые модели готовятся в ателье. Вы можете посмотреть всю коллекцию или записаться на личную встречу." },
+  "modeller.empty.viewAll": { tr: "Tüm gelinlikler", en: "All gowns", ar: "جميع الفساتين", ru: "Все платья" },
+
+  "koleksiyon.title": { tr: "Her koleksiyon, bir hikâye", en: "Every collection, a story", ar: "كل مجموعة، حكاية", ru: "Каждая коллекция — история" },
+  "koleksiyon.craftLine": { tr: "Atölyemizde, ölçüye özel dikilir", en: "Made to measure in our atelier", ar: "تُخاط على المقاس في مشغلنا", ru: "Шьётся на заказ в нашем ателье" },
+  "koleksiyon.sceneEyebrow": { tr: "Koleksiyon", en: "Collection", ar: "مجموعة", ru: "Коллекция" },
+  "koleksiyon.exploreCta": { tr: "Koleksiyonu keşfet", en: "Explore the collection", ar: "اكتشفي المجموعة", ru: "Открыть коллекцию" },
+  "koleksiyon.otherCollections": { tr: "Diğer koleksiyonlar", en: "Other collections", ar: "مجموعات أخرى", ru: "Другие коллекции" },
+  "koleksiyon.fallback.dantel": { tr: "El işi dantelin sabırla dokunduğu, zamansız bir romantizm.", en: "Timeless romance, where handmade lace is woven with patience.", ar: "رومانسية خالدة، حيث يُنسَج الدانتيل اليدوي بصبر.", ru: "Вечная романтика, где кружево ручной работы соткано с терпением." },
+  "koleksiyon.fallback.saten": { tr: "Işığı taşıyan saten; sade, güçlü ve kendinden emin.", en: "Satin that carries the light — pure, strong and self-assured.", ar: "ساتان يحمل الضوء؛ نقيّ وقويّ وواثق.", ru: "Атлас, несущий свет, — простой, сильный и уверенный." },
+  "koleksiyon.fallback.modern": { tr: "Net çizgiler ve çağdaş siluet — bugünün gelini için.", en: "Clean lines and a contemporary silhouette — for today's bride.", ar: "خطوط نقية وقوام عصري — لعروس اليوم.", ru: "Чёткие линии и современный силуэт — для сегодняшней невесты." },
 };
