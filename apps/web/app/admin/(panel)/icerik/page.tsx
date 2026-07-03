@@ -1,8 +1,8 @@
 "use client";
 
-// Celine Admin — İçerik: sitedeki metin ve görselleri düzenler.
-// Alanlar lib/content.ts'deki CONTENT_REGISTRY'den üretilir; kaydedilmemiş
-// alanlar sitede varsayılan haliyle görünür. Kaydet → PATCH /content.
+// Celine Admin — İçerik: sol bölüm menüsü + sağ panel (sekmeli, tam genişlik).
+// Alanlar lib/content.ts'deki CONTENT_REGISTRY'den üretilir; tüm bölümlerin
+// düzenlemeleri tek form state'te tutulur, tek "Kaydet" hepsini gönderir.
 
 import {
   useCallback,
@@ -18,6 +18,7 @@ import { Card, Field, Input, Textarea } from "@/components/admin/ui";
 import { ImageField } from "@/components/admin/ImageField";
 import { useToast } from "@/components/admin/ui-client";
 import { Button } from "@/components/ui/Button";
+import { cn } from "@/lib/utils";
 
 type Form = Record<string, string>;
 
@@ -33,11 +34,13 @@ function fromMap(map: ContentMap): Form {
 
 export default function AdminContentPage() {
   const toast = useToast();
+  const groups = useMemo(() => contentGroups(), []);
 
   const [saved, setSaved] = useState<Form | null>(null);
   const [form, setForm] = useState<Form | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [active, setActive] = useState<string>(groups[0]?.group ?? "");
 
   const load = useCallback(() => {
     setLoadError(null);
@@ -61,6 +64,16 @@ export default function AdminContentPage() {
     return CONTENT_REGISTRY.map((f) => f.key).filter((k) => form[k] !== saved[k]);
   }, [saved, form]);
   const dirty = dirtyKeys.length > 0;
+
+  // Hangi bölümlerde kaydedilmemiş değişiklik var (nav'da nokta göstergesi).
+  const dirtyGroups = useMemo(() => {
+    const set = new Set<string>();
+    if (!saved || !form) return set;
+    for (const f of CONTENT_REGISTRY) {
+      if (form[f.key] !== saved[f.key]) set.add(f.group);
+    }
+    return set;
+  }, [saved, form]);
 
   function set(key: string, value: string) {
     setForm((prev) => (prev ? { ...prev, [key]: value } : prev));
@@ -93,14 +106,15 @@ export default function AdminContentPage() {
   }
 
   const loading = !form && !loadError;
+  const activeGroup = groups.find((g) => g.group === active) ?? groups[0];
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 pb-24">
+    <div className="space-y-6 pb-24">
       <div>
         <h1 className="font-display text-3xl">İçerik</h1>
         <p className="mt-1 text-sm text-muted">
-          Sitedeki metin ve görselleri buradan düzenleyin. Bir alanı boşaltıp
-          kaydederseniz o alan varsayılan (fabrika) haline döner.
+          Soldan bir bölüm seçin, sağdaki metin ve görselleri düzenleyin. Bir
+          alanı boşaltıp kaydederseniz o alan varsayılan (fabrika) haline döner.
         </p>
       </div>
 
@@ -123,12 +137,57 @@ export default function AdminContentPage() {
         </Card>
       )}
 
-      {form && (
-        <form onSubmit={handleSubmit} noValidate className="space-y-6">
-          {contentGroups().map(({ group, fields }) => (
-            <Card key={group} title={group}>
+      {form && activeGroup && (
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
+          {/* Sol: bölüm menüsü (mobilde yatay kaydırılır) */}
+          <nav
+            aria-label="İçerik bölümleri"
+            className="lg:w-64 lg:shrink-0"
+          >
+            <ul className="flex gap-2 overflow-x-auto pb-1 lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0">
+              {groups.map((g) => {
+                const isActive = g.group === active;
+                return (
+                  <li key={g.group} className="shrink-0 lg:shrink">
+                    <button
+                      type="button"
+                      onClick={() => setActive(g.group)}
+                      aria-current={isActive ? "true" : undefined}
+                      className={cn(
+                        "flex w-full items-center justify-between gap-2 whitespace-nowrap rounded-[2px] px-3.5 py-2.5 text-left text-sm transition-colors lg:whitespace-normal",
+                        isActive
+                          ? "bg-ink text-cream"
+                          : "text-muted hover:bg-powder hover:text-ink",
+                      )}
+                    >
+                      <span className={cn(isActive && "font-medium")}>
+                        {g.group}
+                      </span>
+                      {dirtyGroups.has(g.group) ? (
+                        <span
+                          aria-label="kaydedilmemiş"
+                          className={cn(
+                            "h-1.5 w-1.5 shrink-0 rounded-full",
+                            isActive ? "bg-cream" : "bg-rose",
+                          )}
+                        />
+                      ) : null}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          {/* Sağ: seçili bölümün alanları */}
+          <form
+            onSubmit={handleSubmit}
+            noValidate
+            className="min-w-0 flex-1 space-y-6"
+          >
+            <Card title={activeGroup.group}>
               <div className="space-y-5">
-                {fields.map((f) => {
+                {activeGroup.fields.map((f) => {
                   const fid = `c-${f.key.replace(/\./g, "-")}`;
                   return (
                     <Field key={f.key} label={f.label} htmlFor={fid} hint={f.hint}>
@@ -157,27 +216,27 @@ export default function AdminContentPage() {
                 })}
               </div>
             </Card>
-          ))}
 
-          {/* Kaydet çubuğu — yapışkan; mobil alt navı geçecek şekilde. */}
-          <div className="sticky bottom-16 z-40 md:bottom-2">
-            <div className="flex items-center justify-between gap-3 rounded-[2px] border border-ink/10 bg-cream/95 px-4 py-3 shadow-[0_10px_30px_-18px_rgba(51,44,40,0.5)] backdrop-blur">
-              <p className="text-xs text-muted">
-                {dirty
-                  ? `${dirtyKeys.length} değişiklik kaydedilmedi.`
-                  : "Tüm değişiklikler kaydedildi."}
-              </p>
-              <Button
-                type="submit"
-                size="sm"
-                disabled={!dirty || saving}
-                className="min-w-40"
-              >
-                {saving ? "Kaydediliyor…" : "Kaydet"}
-              </Button>
+            {/* Kaydet çubuğu — yapışkan; tüm bölümlerdeki değişiklikleri kaydeder */}
+            <div className="sticky bottom-16 z-40 md:bottom-2">
+              <div className="flex items-center justify-between gap-3 rounded-[2px] border border-ink/10 bg-cream/95 px-4 py-3 shadow-[0_10px_30px_-18px_rgba(51,44,40,0.5)] backdrop-blur">
+                <p className="text-xs text-muted">
+                  {dirty
+                    ? `${dirtyKeys.length} değişiklik kaydedilmedi`
+                    : "Tüm değişiklikler kaydedildi"}
+                </p>
+                <Button
+                  type="submit"
+                  size="sm"
+                  disabled={!dirty || saving}
+                  className="min-w-40"
+                >
+                  {saving ? "Kaydediliyor…" : "Kaydet"}
+                </Button>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       )}
     </div>
   );
