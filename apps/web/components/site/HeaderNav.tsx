@@ -65,7 +65,7 @@ export function HeaderNav({ locale }: HeaderNavProps) {
           "sticky top-0 z-50 transition-all duration-500",
           scrolled
             ? "border-b border-rose-soft/60 bg-powder/90 backdrop-blur-md"
-            : "border-b border-transparent bg-powder/0",
+            : "border-b border-transparent bg-powder/70 backdrop-blur-sm",
         )}
       >
         <div className="mx-auto max-w-[1400px] px-6 sm:px-8">
