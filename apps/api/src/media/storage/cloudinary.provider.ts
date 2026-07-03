@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { v2 as cloudinary } from 'cloudinary';
-import type { SignedUpload, StorageProvider } from './storage.interface';
+import type {
+  SignedUpload,
+  StorageProvider,
+  UploadedAsset,
+} from './storage.interface';
 
 /**
  * Cloudinary adapter. Signs direct browser uploads (the API secret never leaves
@@ -37,6 +41,24 @@ export class CloudinaryProvider implements StorageProvider {
       apiKey: this.config.getOrThrow<string>('CLOUDINARY_API_KEY'),
       cloudName: this.config.getOrThrow<string>('CLOUDINARY_CLOUD_NAME'),
       folder: params.folder,
+    };
+  }
+
+  async uploadBuffer(
+    buffer: Buffer,
+    folder: string,
+    contentType = 'image/png',
+  ): Promise<UploadedAsset> {
+    const dataUri = `data:${contentType};base64,${buffer.toString('base64')}`;
+    const res = await cloudinary.uploader.upload(dataUri, {
+      folder,
+      resource_type: 'image',
+    });
+    return {
+      url: res.secure_url,
+      publicId: res.public_id,
+      width: res.width,
+      height: res.height,
     };
   }
 

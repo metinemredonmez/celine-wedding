@@ -3,6 +3,7 @@ import {
   STORAGE_PROVIDER,
   type SignedUpload,
   type StorageProvider,
+  type UploadedAsset,
 } from './storage/storage.interface';
 import { SignUploadDto } from './dto/sign-upload.dto';
 
@@ -20,6 +21,15 @@ export class MediaService {
       folder: dto.folder ?? DEFAULT_FOLDER,
       publicId: dto.publicId,
     });
+  }
+
+  /** Server-side upload of raw bytes (ör. AI çıktısı) → Cloudinary. */
+  uploadBuffer(
+    buffer: Buffer,
+    folder: string,
+    contentType?: string,
+  ): Promise<UploadedAsset> {
+    return this.storage.uploadBuffer(buffer, folder, contentType);
   }
 
   /** Remove an asset from Cloudinary by public id. */

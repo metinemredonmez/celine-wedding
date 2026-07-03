@@ -9,6 +9,7 @@ const OPTIONAL_WARN = [
   'CLOUDINARY_API_KEY',
   'CLOUDINARY_API_SECRET',
   'SMTP_HOST',
+  'AI_BG_API_KEY',
 ] as const;
 
 export function validateEnv(config: Record<string, unknown>): Record<string, unknown> {

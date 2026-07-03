@@ -16,6 +16,7 @@ import { AvailabilityModule } from './availability/availability.module';
 import { SiteSettingsModule } from './site-settings/site-settings.module';
 import { ContentModule } from './content/content.module';
 import { TryOnModule } from './try-on/try-on.module';
+import { AiBackgroundModule } from './ai-background/ai-background.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { TryOnModule } from './try-on/try-on.module';
     SiteSettingsModule,
     ContentModule,
     TryOnModule,
+    AiBackgroundModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

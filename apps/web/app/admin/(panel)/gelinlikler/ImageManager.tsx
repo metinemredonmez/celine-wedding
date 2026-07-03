@@ -6,7 +6,7 @@
 // silme onay diyaloğuyla (DELETE). İlk görsel sitede kapaktır.
 
 import { useRef, useState, type ComponentPropsWithoutRef } from "react";
-import { ArrowDown, ArrowUp, ImagePlus, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, ImagePlus, Sparkles, Trash2 } from "lucide-react";
 import {
   AdminApiError,
   adminDelete,
@@ -21,6 +21,15 @@ import { cn } from "@/lib/utils";
 
 const UPLOAD_FOLDER = "celine/dresses";
 const MAX_FILE_MB = 15;
+
+// AI arka plan hazır stilleri (etiket TR, komut EN — AI daha iyi anlıyor).
+const AI_BG_PRESETS: Array<{ label: string; prompt: string }> = [
+  { label: "Sade beyaz stüdyo", prompt: "clean minimalist seamless white studio background, soft even light" },
+  { label: "Açık gri stüdyo", prompt: "elegant seamless light grey studio backdrop, soft shadow, professional" },
+  { label: "Klasik salon", prompt: "luxurious classical hall with marble columns and warm soft light" },
+  { label: "Bahçe", prompt: "elegant garden with soft greenery and white flowers, natural daylight" },
+  { label: "Işıltılı sahne", prompt: "elegant event stage with soft warm bokeh lights, dark backdrop" },
+];
 
 /** Cloudinary direkt upload yanıtından kullandığımız alanlar. */
 type CloudinaryUploadResponse = {
@@ -80,6 +89,12 @@ export function ImageManager({
   const [reordering, setReordering] = useState(false);
   const [toDelete, setToDelete] = useState<AdminImage | null>(null);
   const [deleting, setDeleting] = useState(false);
+
+  // AI arka plan değiştirme
+  const [aiFor, setAiFor] = useState<AdminImage | null>(null);
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
 
   // ─────────────────────────── Upload ───────────────────────────
 
@@ -231,6 +246,43 @@ export function ImageManager({
     }
   }
 
+  // ─────────────────────────── AI arka plan ───────────────────────────
+
+  async function runAi() {
+    if (!aiFor || aiBusy || !aiPrompt.trim()) return;
+    setAiBusy(true);
+    setAiError(null);
+    try {
+      const gen = await adminPost<{
+        url: string;
+        publicId: string;
+        width?: number;
+        height?: number;
+      }>("ai-background", { imageUrl: aiFor.url, prompt: aiPrompt.trim() });
+
+      const img = await adminPost<AdminImage>(`dresses/${dressId}/images`, {
+        url: gen.url,
+        publicId: gen.publicId,
+        alt: dressName,
+        ...(gen.width ? { width: gen.width } : {}),
+        ...(gen.height ? { height: gen.height } : {}),
+      });
+
+      onChange([...images, img]);
+      toast.show("AI arka planlı görsel eklendi.");
+      setAiFor(null);
+      setAiPrompt("");
+    } catch (err) {
+      setAiError(
+        err instanceof AdminApiError && err.status !== 401
+          ? err.message
+          : "Oluşturulamadı. AI sağlayıcı/anahtar sunucuda ayarlı mı?",
+      );
+    } finally {
+      setAiBusy(false);
+    }
+  }
+
   return (
     <Card
       title="Görseller"
@@ -315,6 +367,15 @@ export function ImageManager({
                   >
                     <ArrowDown size={16} strokeWidth={1.75} aria-hidden />
                   </IconButton>
+                  <IconButton
+                    label="AI ile arka planı değiştir"
+                    onClick={() => {
+                      setAiFor(img);
+                      setAiError(null);
+                    }}
+                  >
+                    <Sparkles size={16} strokeWidth={1.75} aria-hidden />
+                  </IconButton>
                 </div>
                 <IconButton
                   label="Görseli sil"
@@ -329,6 +390,80 @@ export function ImageManager({
           ))}
         </ul>
       )}
+
+      {aiFor ? (
+        <div className="mt-5 rounded-[2px] border border-rose-soft bg-powder/40 p-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={aiFor.url}
+              alt=""
+              className="h-28 w-24 shrink-0 rounded-[2px] border border-ink/10 object-cover"
+            />
+            <div className="min-w-0 flex-1">
+              <p className="font-display text-lg text-ink">
+                AI ile arka planı değiştir
+              </p>
+              <p className="mt-0.5 text-xs text-muted">
+                Bir stil seç ya da kendi komutunu yaz. <strong>Yeni bir görsel</strong>{" "}
+                eklenir; orijinal silinmez.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {AI_BG_PRESETS.map((p) => (
+                  <button
+                    key={p.label}
+                    type="button"
+                    onClick={() => setAiPrompt(p.prompt)}
+                    className={cn(
+                      "rounded-full border px-3 py-1.5 text-xs transition-colors",
+                      aiPrompt === p.prompt
+                        ? "border-ink bg-ink text-cream"
+                        : "border-ink/15 text-muted hover:border-ink",
+                    )}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+              <input
+                value={aiPrompt}
+                onChange={(e) => setAiPrompt(e.target.value)}
+                placeholder="Örn: zarif beyaz stüdyo, yumuşak ışık"
+                className="mt-3 h-11 w-full rounded-[2px] border border-ink/15 bg-white px-3.5 text-[0.95rem] text-ink placeholder:text-faint focus:border-rose focus:outline-none"
+              />
+              {aiError ? (
+                <p
+                  role="alert"
+                  className="mt-2 rounded-[2px] bg-[#f4dcdc] px-3 py-2 text-sm text-[#8c3232]"
+                >
+                  {aiError}
+                </p>
+              ) : null}
+              <div className="mt-3 flex gap-2">
+                <Button
+                  size="sm"
+                  disabled={aiBusy || !aiPrompt.trim()}
+                  onClick={() => void runAi()}
+                >
+                  {aiBusy ? "Oluşturuluyor…" : "Oluştur"}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={aiBusy}
+                  onClick={() => {
+                    setAiFor(null);
+                    setAiPrompt("");
+                    setAiError(null);
+                  }}
+                >
+                  Kapat
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       <ConfirmDialog
         open={Boolean(toDelete)}
