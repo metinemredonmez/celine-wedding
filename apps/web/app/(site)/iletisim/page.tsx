@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { resolveAddress, resolveMapQuery } from "@/lib/atelier";
 import { getContent, getSiteSettings } from "@/lib/api";
 import { c, toParagraphs } from "@/lib/content";
 import { getLocale } from "@/lib/i18n";
@@ -16,9 +17,6 @@ export const metadata: Metadata = {
   description:
     "Celine Gelinlik atölyesine ulaşın — adres, telefon, WhatsApp ve çalışma saatleri.",
 };
-
-const FALLBACK_ADDRESS =
-  "İdealtepe Mah. Panorama Sok. Defne Apt. No:5 D:7, Maltepe / İstanbul";
 
 type DetailRowProps = { label: string; children: ReactNode };
 
@@ -39,7 +37,7 @@ export default async function IletisimPage() {
     getLocale(),
   ]);
 
-  const address = settings.address?.trim() || FALLBACK_ADDRESS;
+  const address = resolveAddress(settings.address);
   const phone = settings.phone?.trim() || null;
   const tel = telLink(phone);
   const whatsapp = settings.whatsapp ?? process.env.NEXT_PUBLIC_WHATSAPP_PHONE ?? null;
@@ -59,7 +57,7 @@ export default async function IletisimPage() {
 
   // Modern harita: mapUrl bir Google "embed" bağlantısıysa TAM pin olarak onu
   // kullan; değilse adresten anahtarsız embed üret (yakın zoom). Yön için ayrı link.
-  const mapQuery = encodeURIComponent(address);
+  const mapQuery = encodeURIComponent(resolveMapQuery(settings.address));
   const isEmbedUrl = !!mapUrl && /output=embed|\/maps\/embed/.test(mapUrl);
   const mapEmbed = isEmbedUrl
     ? (mapUrl as string)

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getContent, getSiteSettings } from "@/lib/api";
+import { resolveAddress } from "@/lib/atelier";
 import { c } from "@/lib/content";
 import { getLocale } from "@/lib/i18n";
 import { t } from "@/lib/i18n/config";
@@ -37,13 +38,9 @@ export async function Footer() {
             <p className="max-w-xs text-sm leading-relaxed text-muted">
               {c(content, "footer.tagline")}
             </p>
-            {s.address ? (
-              <p className="text-sm leading-relaxed text-faint">{s.address}</p>
-            ) : (
-              <p className="text-sm leading-relaxed text-faint">
-                {t(locale, "footer.addressFallback")}
-              </p>
-            )}
+            <p className="text-sm leading-relaxed text-faint">
+              {resolveAddress(s.address)}
+            </p>
           </div>
 
           {/* Menü */}

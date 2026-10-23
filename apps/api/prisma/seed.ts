@@ -45,7 +45,7 @@ async function seedSettings(): Promise<void> {
       phone: '+90 000 000 00 00',
       whatsapp: '+90 000 000 00 00',
       instagram: 'https://www.instagram.com/celinegelinlik/',
-      address: 'İdealtepe Mah. Panorama Sok. Defne Apt. No:5 D:7, Maltepe / İstanbul',
+      address: 'Çınar Mah., Küçükyalı — Maltepe / İstanbul',
       mapUrl: null,
       about:
         'Celine Gelinlik — Seda Dönmez Couture. Ölçüye özel, kişiye özel couture gelinlik; her gelin için tek ve eşsiz.',

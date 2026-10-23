@@ -6,7 +6,7 @@ Gerçek gelinlik fotoğraflarını editoryal bir dille sergiler; birincil hedef
 
 - **Web:** https://celinegelinlik.com
 - **Repo:** https://github.com/metinemredonmez/celine-wedding
-- **Konum:** İdealtepe Mah. Panaroma Sok. Defne Apt. No:5 D:7, Maltepe / İstanbul
+- **Konum:** Çınar Mah., Küçükyalı — Maltepe / İstanbul
 
 ---
 

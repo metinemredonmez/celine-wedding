@@ -1,4 +1,5 @@
 import type { SiteSettings } from "@/lib/types";
+import { resolveAddress } from "@/lib/atelier";
 import { t, type Locale } from "@/lib/i18n/config";
 import { telLink, waLink } from "@/lib/utils";
 
@@ -13,9 +14,7 @@ type Props = {
 export function AtelierInfo({ settings, locale }: Props) {
   const phone = settings.phone ?? null;
   const wa = settings.whatsapp ?? process.env.NEXT_PUBLIC_WHATSAPP_PHONE ?? null;
-  const address =
-    settings.address ??
-    "İdealtepe Mah. Panorama Sok. Defne Apt. No:5 D:7, Maltepe / İstanbul";
+  const address = resolveAddress(settings.address);
   const tel = telLink(phone);
   const waText = t(locale, "cta.whatsappText");
 
