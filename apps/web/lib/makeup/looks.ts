@@ -294,6 +294,15 @@ export const BRIDAL_LOOKS: BridalLook[] = [
 
 export const DEFAULT_BRIDAL_LOOK = BRIDAL_LOOKS[0];
 
+/** Görünüm kartındaki renk noktaları: dudak, far, allık (sunucu bileşenleri de kullanır). */
+export function lookDots(look: Look): string[] {
+  return [
+    findShade(LIP_SHADES, look.lip)?.hex,
+    findShade(SHADOW_SHADES, look.shadow)?.hex,
+    findShade(BLUSH_SHADES, look.blush)?.hex,
+  ].filter((h): h is string => Boolean(h));
+}
+
 /** Fondöten tonları (açık → koyu); cilt eşitleme + hafif ton. */
 export const FOUNDATION_SHADES: Shade[] = [
   { id: "porselen", name: "Porselen", hex: "#F1D9C9", depth: 0 },

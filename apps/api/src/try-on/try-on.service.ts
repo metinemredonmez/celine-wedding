@@ -2,25 +2,41 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
-import { TRYON_PROVIDER, type TryOnProvider } from './provider/try-on.provider';
+import { TRYON_PROVIDER, type TryOnInput, type TryOnProvider } from './provider/try-on.provider';
 import { CreateTryOnDto } from './dto/create-try-on.dto';
+
+/** DB'ye yazılan yer tutucu: base64 gövde saklanmaz (KVKK + satır boyutu). */
+const INLINE_PERSON_IMAGE = 'inline';
 
 @Injectable()
 export class TryOnService {
+  private readonly logger = new Logger(TryOnService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
     @Inject(TRYON_PROVIDER) private readonly provider: TryOnProvider,
   ) {}
 
+  /**
+   * İsteği PENDING olarak yazar ve üretimi ARKA PLANDA başlatır; HTTP yanıtı
+   * hemen döner. Sağlayıcı 5-120 sn sürebildiği için istemci GET /try-on/:id
+   * ile yoklar (nginx/istemci zaman aşımına takılmamak için).
+   */
   async create(dto: CreateTryOnDto) {
     if (this.config.get<string>('TRYON_PROVIDER') === 'disabled') {
       throw new ServiceUnavailableException('Sanal deneme şu an kapalı.');
+    }
+
+    const personImage = dto.personImage ?? dto.personImageUrl;
+    if (!personImage) {
+      throw new BadRequestException('personImage veya personImageUrl gerekli');
     }
 
     // dressId verildiyse her durumda var olduğunu doğrula (FK 500 yerine 404).
@@ -56,27 +72,38 @@ export class TryOnService {
     const request = await this.prisma.tryOnRequest.create({
       data: {
         dressId,
-        personImageUrl: dto.personImageUrl,
+        personImageUrl: dto.personImageUrl ?? INLINE_PERSON_IMAGE,
         garmentImageUrl,
         status: 'PENDING',
         provider: this.provider.name,
       },
     });
 
-    const result = await this.provider.generate({
-      personImageUrl: dto.personImageUrl,
-      garmentImageUrl,
-    });
+    void this.run(request.id, { personImageUrl: personImage, garmentImageUrl });
+    return request;
+  }
 
-    return this.prisma.tryOnRequest.update({
-      where: { id: request.id },
-      data: {
-        status: result.status,
-        resultUrl: result.resultUrl ?? null,
-        jobId: result.jobId ?? null, // async sağlayıcı: poll için sakla
-        error: result.error ?? null,
-      },
-    });
+  /** Arka plan üretimi: sağlayıcıyı çağırır, satırı DONE/FAILED yapar. Asla fırlatmaz. */
+  private async run(id: string, input: TryOnInput): Promise<void> {
+    try {
+      const result = await this.provider.generate(input);
+      await this.prisma.tryOnRequest.update({
+        where: { id },
+        data: {
+          status: result.status,
+          resultUrl: result.resultUrl ?? null,
+          jobId: result.jobId ?? null,
+          error: result.error ?? null,
+        },
+      });
+      if (result.status === 'FAILED') this.logger.warn(`try-on ${id} failed: ${result.error}`);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      this.logger.error(`try-on ${id} crashed: ${message}`);
+      await this.prisma.tryOnRequest
+        .update({ where: { id }, data: { status: 'FAILED', error: message } })
+        .catch(() => undefined);
+    }
   }
 
   async findOne(id: string) {

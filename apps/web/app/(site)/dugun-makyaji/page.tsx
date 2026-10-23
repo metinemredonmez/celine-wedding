@@ -1,20 +1,34 @@
 import type { Metadata } from "next";
+import { getDresses } from "@/lib/api";
 import { getLocale } from "@/lib/i18n";
 import { t } from "@/lib/i18n/config";
 import { Container } from "@/components/site/Container";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { CtaBand } from "@/components/site/CtaBand";
 import { BridalMakeupStudio } from "@/components/makeup/BridalMakeupStudio";
+import { DressTryOn, type DressOption } from "@/components/makeup/DressTryOn";
 
 export const metadata: Metadata = {
   title: "Düğün Makyajı — Sanal Deneme",
   description:
-    "Klasik, doğal, romantik ya da kına gecesi gelin makyajını örnek yüzde veya kendi fotoğrafınızda deneyin. Fotoğrafınız cihazınızdan çıkmaz.",
+    "Klasik, doğal, romantik ya da kına gecesi gelin makyajını örnek yüzde veya kendi fotoğrafınızda deneyin; beğendiğiniz gelinliği yapay zekâ ile üzerinizde görün.",
 };
 
-/** Sanal düğün makyajı demosu: tamamen istemci tarafı, fotoğraf hiçbir yere yüklenmez. */
+/**
+ * Sanal deneme demosu. Makyaj: tamamen istemci tarafı, fotoğraf hiçbir yere
+ * yüklenmez. Gelinlik: fotoğraf API üzerinden fal.ai'ye gider (rıza ile).
+ */
 export default async function DugunMakyajiPage() {
-  const locale = await getLocale();
+  const [locale, dresses] = await Promise.all([
+    getLocale(),
+    getDresses({ limit: 24, sort: "order", dir: "asc" }),
+  ]);
+  const options: DressOption[] = dresses.data.map((d) => ({
+    id: d.id,
+    name: d.name,
+    slug: d.slug,
+    image: d.images[0]?.url ?? null,
+  }));
 
   return (
     <>
@@ -39,8 +53,22 @@ export default async function DugunMakyajiPage() {
         </Container>
       </section>
 
+      {/* Gelinlik denemesi (AI) */}
+      <section id="gelinlik-deneme" className="scroll-mt-24 bg-cream py-20 sm:py-28">
+        <Container size="wide">
+          <SectionHeading
+            eyebrow={t(locale, "tryon.eyebrow")}
+            title={t(locale, "tryon.title")}
+            subtitle={t(locale, "tryon.subtitle")}
+          />
+          <div className="mt-12" dir="ltr" lang="tr">
+            <DressTryOn dresses={options} />
+          </div>
+        </Container>
+      </section>
+
       <CtaBand
-        tone="cream"
+        tone="powder-deep"
         eyebrow={t(locale, "makeup.ctaEyebrow")}
         title={t(locale, "makeup.ctaTitle")}
         text={t(locale, "makeup.ctaText")}

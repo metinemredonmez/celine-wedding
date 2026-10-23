@@ -12,6 +12,7 @@ import { CtaBand } from "@/components/site/CtaBand";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
 import { HERO_IMAGE, collectionCover } from "@/lib/gallery";
+import { BRIDAL_LOOKS, lookDots } from "@/lib/makeup/looks";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -241,6 +242,52 @@ export default async function HomePage() {
                   {c(content, "home.story.cta")}
                 </ButtonLink>
               </div>
+            </Reveal>
+          </div>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------------------ */}
+      {/* 6b) Sanal deneme tanıtımı — düğün makyajı + gelinlik denemesi */}
+      {/* ------------------------------------------------------------ */}
+      <section className="bg-powder-deep py-20 sm:py-28">
+        <Container>
+          <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+            <Reveal>
+              <div className="flex flex-col items-start gap-6">
+                <span className="u-label text-rose">{t(locale, "home.tryon.eyebrow")}</span>
+                <h2 className="font-display text-3xl leading-[1.12] text-ink sm:text-4xl md:text-5xl">
+                  {t(locale, "home.tryon.title")}
+                </h2>
+                <p className="text-muted leading-relaxed">{t(locale, "home.tryon.text")}</p>
+                <div className="mt-2 flex flex-wrap gap-3">
+                  <ButtonLink href="/dugun-makyaji" variant="primary">
+                    {t(locale, "home.tryon.ctaMakeup")}
+                  </ButtonLink>
+                  <ButtonLink href="/dugun-makyaji#gelinlik-deneme" variant="outline">
+                    {t(locale, "home.tryon.ctaDress")}
+                  </ButtonLink>
+                </div>
+              </div>
+            </Reveal>
+            <Reveal delay={0.1}>
+              {/* Hazır gelin görünümleri — demo sayfasındakiyle aynı liste */}
+              <ul
+                className="grid grid-cols-2 gap-px border border-rose-soft bg-rose-soft sm:grid-cols-3 lg:grid-cols-2"
+                aria-label={t(locale, "home.tryon.looksLabel")}
+              >
+                {BRIDAL_LOOKS.map((l) => (
+                  <li key={l.id} className="flex flex-col gap-2 bg-cream px-5 py-6">
+                    <span className="flex gap-1.5" aria-hidden="true">
+                      {lookDots(l.look).map((hex, i) => (
+                        <span key={i} className="h-3.5 w-3.5 rounded-full" style={{ background: hex }} />
+                      ))}
+                    </span>
+                    <span className="font-display text-xl text-ink">{l.name}</span>
+                    <span className="text-xs leading-relaxed text-muted">{l.note}</span>
+                  </li>
+                ))}
+              </ul>
             </Reveal>
           </div>
         </Container>

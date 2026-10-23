@@ -37,8 +37,13 @@ export const modelImage = (id: string) => `/makeup/models/${modelById(id).id}.jp
 
 const MAX_SIDE = 1080;
 
-function toCanvas(src: CanvasImageSource, width: number, height: number): HTMLCanvasElement {
-  const s = Math.min(1, MAX_SIDE / Math.max(width, height));
+function toCanvas(
+  src: CanvasImageSource,
+  width: number,
+  height: number,
+  maxSide: number = MAX_SIDE,
+): HTMLCanvasElement {
+  const s = Math.min(1, maxSide / Math.max(width, height));
   const c = document.createElement("canvas");
   c.width = Math.round(width * s);
   c.height = Math.round(height * s);
@@ -62,13 +67,14 @@ export type Photo = { image: HTMLCanvasElement; width: number; height: number };
 /** Kod çözme belleği için üst sınır: 48 MP bir telefon fotoğrafı bile bunun altında kalır. */
 export const MAX_FILE_BYTES = 25 * 1024 * 1024;
 
-export async function photoFromFile(file: File): Promise<Photo> {
+/** maxSide: işlenecek kopyanın uzun kenarı (makyaj: 1080; gelinlik denemesi daha büyük ister). */
+export async function photoFromFile(file: File, maxSide: number = MAX_SIDE): Promise<Photo> {
   if (!file.type.startsWith("image/")) throw new Error("not_an_image");
   if (file.size > MAX_FILE_BYTES) throw new Error("file_too_large");
   try {
     const bmp = await createImageBitmap(file); // EXIF yönü uygulanır
     try {
-      return { image: toCanvas(bmp, bmp.width, bmp.height), width: bmp.width, height: bmp.height };
+      return { image: toCanvas(bmp, bmp.width, bmp.height, maxSide), width: bmp.width, height: bmp.height };
     } finally {
       bmp.close();
     }
@@ -77,7 +83,7 @@ export async function photoFromFile(file: File): Promise<Photo> {
     try {
       const img = await loadImage(url);
       const { naturalWidth: width, naturalHeight: height } = img;
-      return { image: toCanvas(img, width, height), width, height };
+      return { image: toCanvas(img, width, height, maxSide), width, height };
     } finally {
       URL.revokeObjectURL(url);
     }

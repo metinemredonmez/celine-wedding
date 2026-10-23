@@ -12,6 +12,10 @@ async function bootstrap(): Promise<void> {
   // (throttler'ın herkesi tek IP saymaması için şart).
   app.set('trust proxy', 1);
 
+  // Sanal deneme fotoğrafı base64 olarak gövdede gelir (tarayıcı 1536 px'e
+  // küçültür, ~0,5-1 MB); Express'in 100 kB varsayılanı yetmez.
+  app.useBodyParser('json', { limit: '8mb' });
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

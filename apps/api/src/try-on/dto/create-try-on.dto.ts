@@ -1,10 +1,27 @@
-import { IsOptional, IsString, IsUrl } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsString, IsUrl, Matches, MaxLength } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+
+/** Yaklaşık 6 MB base64 → ~4,5 MB görsel; tarayıcı zaten 1536 px'e küçültüp gönderir. */
+const MAX_INLINE_IMAGE_CHARS = 8_000_000;
 
 export class CreateTryOnDto {
-  @ApiProperty({ description: 'Gelin fotoğrafı URL (önce /media/sign ile yüklenir)' })
+  @ApiPropertyOptional({ description: 'Gelin fotoğrafı URL (önce /media/sign ile yüklenmişse)' })
+  @IsOptional()
   @IsUrl()
-  personImageUrl: string;
+  personImageUrl?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'Gelin fotoğrafı, base64 data URI (data:image/jpeg;base64,…). Herkese açık demo bunu ' +
+      'kullanır: fotoğraf saklanmaz, yalnız AI sağlayıcısına iletilir. personImageUrl yerine.',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(MAX_INLINE_IMAGE_CHARS)
+  @Matches(/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]+=*$/, {
+    message: 'personImage geçerli bir JPEG/PNG/WebP data URI olmalı',
+  })
+  personImage?: string;
 
   @ApiPropertyOptional({ description: 'Gelinlik id — garmentImageUrl verilmezse kapak görseli kullanılır' })
   @IsOptional()

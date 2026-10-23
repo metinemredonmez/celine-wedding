@@ -1,48 +1,73 @@
 # Virtual Try-On (AI) — Sanal Gelinlik Deneme
 
-Gelin kendi fotoğrafını yükler, seçtiği gelinliği AI ile **üzerinde** önizler.
-Modül **sağlayıcı-bağımsız** tasarlandı: gerçek AI servisini sonra seçip tek
-dosyada bağlarız. Kod: `apps/api/src/try-on/`.
+Gelin boydan fotoğrafını yükler, koleksiyondan bir gelinlik seçer; AI gelinliği
+**üzerinde** gösterir. Herkese açık demo: `/dugun-makyaji#gelinlik-deneme`
+(aynı sayfada tarayıcı-içi düğün makyajı stüdyosu da var; o kısım AI servisi
+kullanmaz, fotoğraf cihazdan çıkmaz).
+
+Sağlayıcı **fal.ai** (fashn/tryon). Kod: `apps/api/src/try-on/`,
+`apps/web/components/makeup/DressTryOn.tsx`, `apps/web/app/api/try-on/`.
 
 ## Akış
 
-1. Gelin fotoğrafını `POST /media/sign` ile Cloudinary'e yükler → `personImageUrl`.
-2. `POST /try-on { personImageUrl, dressId }` — gelinlik görseli, `dressId`'nin
-   kapak fotoğrafından alınır (veya `garmentImageUrl` açıkça verilir).
-3. Servis bir `TryOnRequest` (PENDING) yazar, seçili sağlayıcıyı çağırır,
-   sonucu `DONE` (+`resultUrl`) veya `FAILED` (+`error`) olarak günceller.
-4. `GET /try-on/:id` — durum/sonuç sorgulanır (async sağlayıcılar için poll).
+1. Tarayıcı fotoğrafı 1280 px'e küçültür, JPEG base64 (≤ ~0,9 MB) yapar.
+2. `POST /api/try-on` (Next route handler) → `POST /try-on { personImage, dressId }`
+   (NestJS). Next proxy `x-forwarded-for`'u taşır; API dışarı açık olmak zorunda
+   değil, CORS gerekmez.
+3. API `TryOnRequest` (PENDING) yazar — base64 **DB'ye yazılmaz**
+   (`personImageUrl = "inline"`) — ve üretimi **arka planda** başlatır; yanıt
+   hemen döner (sağlayıcı 5-120 sn sürebilir, nginx/istemci zaman aşımına
+   takılmasın).
+4. Tarayıcı `GET /api/try-on/:id` ile 2 sn'de bir yoklar (en çok ~170 sn):
+   `DONE` + `resultUrl` ya da `FAILED` + `error`.
+5. Sonuç fal'ın CDN adresinden gösterilir; "Kaydet / paylaş" tarayıcıda indirir.
 
-## Sağlayıcı seçimi (env)
+## fal.ai sağlayıcısı (`provider/fal-try-on.provider.ts`)
 
-`apps/api/.env`:
+- Kuyruk ucu: `POST https://queue.fal.run/{model}` → `status_url` 1,5 sn'de bir
+  yoklanır (`IN_QUEUE`/`IN_PROGRESS` → `COMPLETED`) → `response_url`'den
+  `images[0].url`. Kimlik: `Authorization: Key <anahtar>` (Bearer değil).
+- İstek gövdesi modele göre kurulur (`fal-ai/fashn/*` → `model_image`,
+  `garment_image`, `category: one-pieces`, `mode: quality`;
+  `fal-ai/idm-vton` → `human_image_url`, `garment_image_url`, `category:
+  dresses`, zorunlu `description`). Bilinmeyen model → FAILED (sessiz yanlış
+  gövde yerine).
+- `has_nsfw_concepts` bayrağı → "içerik filtresine takıldı".
+- Gelinlik görseli: `dressId`'nin ilk görseli (admin'de sıra 1). Gelinliğin
+  önden, tek kişilik, sade zeminli bir fotoğrafı sonuç kalitesini belirler.
+
+## Sunucu ayarı (`apps/api/.env`)
 
 ```dotenv
-TRYON_PROVIDER=http          # http | disabled
-TRYON_API_URL=               # seçilen servisin endpoint'i
-TRYON_API_KEY=
-TRYON_MODEL=                 # ör. idm-vton / kolors-virtual-try-on
+TRYON_PROVIDER=fal                     # fal | http | disabled
+TRYON_API_KEY=…                        # fal.ai → API Keys (yalnız "API" yetkisi yeter)
+TRYON_MODEL=fal-ai/fashn/tryon/v1.6    # ya da fal-ai/idm-vton
+TRYON_API_URL=                         # (ops.) kuyruk tabanını ez — test/stub
 ```
 
-`http` sağlayıcı (`provider/http-try-on.provider.ts`) generic bir POST atar ve
-yanıttan `image_url | result_url | url | output[0]` alanını okur. Seçilen servise
-göre istek/yanıt alan adlarını bu tek dosyada uyarlarsın; farklı bir SDK gerekiyorsa
-yeni bir `TryOnProvider` yazıp `try-on.module.ts`'de tek satırda bağlarsın.
+- fal ön ödemeli: hesapta kredi yoksa her deneme FAILED döner (hata metni
+  `error` sütununda ve tarayıcıda "Teknik ayrıntı" altında görünür).
+- Maliyet: fashn ≈ 0,075 $/deneme. Koruma: `POST /try-on` IP başına saatte 5
+  (`@Throttle`), `TRYON_PROVIDER=disabled` ile tamamen kapatılır.
+- Gövde sınırı: API `8mb` (`main.ts`); nginx `client_max_body_size` 1 MB'ın
+  altında kalınacak şekilde tarayıcı küçültür. Sunucuda nginx'i 4m yapmak
+  daha güvenlidir.
+- KVKK: fotoğraf yurt dışındaki sağlayıcıya gider; arayüzde zorunlu rıza
+  kutusu ve `/kvkk` bağlantısı var. Sunucuda fotoğraf saklanmaz; yalnız sonuç
+  adresi ve seçilen gelinlik tutulur.
 
-## Aday servisler (Emre seçecek)
+## Yerel test (fal'a para harcamadan)
 
-| Servis | Not |
-| --- | --- |
-| **fal.ai** (IDM-VTON / CatVTON) | Hızlı, uygun fiyat, basit REST; iyi başlangıç |
-| **Replicate** (IDM-VTON, OOTDiffusion) | Geniş model havuzu, async job + poll |
-| **Kolors Virtual Try-On** (Kwai) | Güçlü sonuç, bölgesel erişim değişir |
-| **Google Vertex / Try-On** | Kurumsal, kota/faturalandırma |
-| Kendi barındırılan (ComfyUI + IDM-VTON) | En ucuz ölçek, DevOps yükü |
+Sahte kuyruk sunucusu yazıp `TRYON_API_URL=http://127.0.0.1:4999`,
+`TRYON_API_KEY=test` ver: `POST /{model}` → `status_url`/`response_url`,
+`GET status` → birkaç `IN_PROGRESS` sonra `COMPLETED`, `GET result` →
+`{ images: [{ url }] }`. Akışın tamamı (gönderim, yoklama, sonuç, DB satırı)
+gerçek sağlayıcı olmadan doğrulanır.
 
-## Notlar
+## Notlar / sonraki adımlar
 
-- AI çağrıları **maliyetli** → lansmandan önce `POST /try-on`'a rate-limit +
-  captcha (Turnstile) eklenmeli (controller'da TODO).
-- `resultUrl`'i kalıcılık için Cloudinary'e taşımak opsiyonel (sağlayıcı URL'leri
-  geçici olabilir).
+- `resultUrl` fal CDN'inde; kalıcılık için Cloudinary'e kopyalamak (MediaService
+  `uploadBuffer`) opsiyonel — admin panelinde denemeleri göstermek istenirse.
+- API yeniden başlarsa süren üretim kaybolur, satır PENDING kalır; tarayıcı 170
+  sn sonra "beklenenden uzun sürdü" der.
 - İlgili: [Veri Modeli](DATA-MODEL.md) (`TryOnRequest`), [Mimari](ARCHITECTURE.md).
