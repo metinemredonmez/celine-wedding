@@ -1,23 +1,12 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
 import { getLocale, isRtl } from "@/lib/i18n";
-import "./globals.css";
-
+// Fontlar npm paketinden, kendi alan adımızdan sunulur (build sırasında Google Fonts'a
+// istek yok — sunucuda Google uzantısız font adresi döndürünce next/font build'i kırıyordu).
 // Serif başlık — AMSALE benzeri zarif, yüksek-kontrast his.
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600"],
-  variable: "--font-cormorant",
-  display: "swap",
-});
-
+import "@fontsource-variable/cormorant-garamond/wght.css";
 // Gövde metni.
-const inter = Inter({
-  subsets: ["latin", "latin-ext"],
-  weight: ["300", "400", "500"],
-  variable: "--font-inter",
-  display: "swap",
-});
+import "@fontsource-variable/inter/wght.css";
+import "./globals.css";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://celinegelinlik.com";
@@ -59,7 +48,6 @@ export default async function RootLayout({
     <html
       lang={locale}
       dir={isRtl(locale) ? "rtl" : "ltr"}
-      className={`${cormorant.variable} ${inter.variable}`}
     >
       <body className="min-h-screen bg-powder text-ink antialiased">
         {children}
