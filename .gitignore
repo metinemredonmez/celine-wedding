@@ -45,3 +45,6 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+
+# --- düğün makyajı: build sırasında kopyalanan MediaPipe wasm --- #
+apps/web/public/mediapipe/

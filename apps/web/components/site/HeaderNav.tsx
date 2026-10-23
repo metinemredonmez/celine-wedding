@@ -47,7 +47,7 @@ export function HeaderNav({ locale }: HeaderNavProps) {
 
   const linkCls = (href: string) =>
     cn(
-      "u-label !text-[0.66rem] transition-colors duration-300 hover:text-ink",
+      "u-label !text-[0.66rem] whitespace-nowrap transition-colors duration-300 hover:text-ink",
       isActive(href) ? "text-ink" : "text-muted",
     );
 
@@ -69,9 +69,9 @@ export function HeaderNav({ locale }: HeaderNavProps) {
         )}
       >
         <div className="mx-auto max-w-[1400px] px-6 sm:px-8">
-          {/* Masaüstü: bölünmüş nav + merkezî wordmark */}
-          <div className="hidden items-center justify-between py-5 lg:flex">
-            <nav className="flex flex-1 items-center gap-7">
+          {/* Masaüstü (≥1280px; 9 madde daha dar ekrana sığmıyor): bölünmüş nav + merkezî wordmark */}
+          <div className="hidden items-center justify-between py-5 xl:flex">
+            <nav className="flex flex-1 items-center gap-5 min-[1400px]:gap-7">
               {NAV_LEFT.map((item) => (
                 <Link key={item.href} href={item.href} className={linkCls(item.href)}>
                   {t(locale, item.key)}
@@ -92,7 +92,7 @@ export function HeaderNav({ locale }: HeaderNavProps) {
               />
             </Link>
 
-            <nav className="flex flex-1 items-center justify-end gap-7">
+            <nav className="flex flex-1 items-center justify-end gap-5 min-[1400px]:gap-7">
               {NAV_RIGHT.filter((i) => i.href !== "/randevu").map((item) => (
                 <Link key={item.href} href={item.href} className={linkCls(item.href)}>
                   {t(locale, item.key)}
@@ -109,7 +109,7 @@ export function HeaderNav({ locale }: HeaderNavProps) {
           </div>
 
           {/* Mobil: hamburger + wordmark */}
-          <div className="flex items-center justify-between py-4 lg:hidden">
+          <div className="flex items-center justify-between py-4 xl:hidden">
             <button
               type="button"
               onClick={() => setOpen(true)}
@@ -141,7 +141,7 @@ export function HeaderNav({ locale }: HeaderNavProps) {
       {/* Mobil tam ekran overlay */}
       <div
         className={cn(
-          "fixed inset-0 z-[60] flex flex-col bg-powder transition-opacity duration-300 lg:hidden",
+          "fixed inset-0 z-[60] flex flex-col bg-powder transition-opacity duration-300 xl:hidden",
           open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
         )}
         aria-hidden={!open}

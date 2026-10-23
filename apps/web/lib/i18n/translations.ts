@@ -93,6 +93,7 @@ export const TRANSLATIONS: Record<string, Record<Locale, string>> = {
   "nav.atelier": { tr: "ATÖLYE", en: "ATELIER", ar: "الأتيليه", ru: "АТЕЛЬЕ" },
   "nav.realBrides": { tr: "GERÇEK GELİNLER", en: "REAL BRIDES", ar: "عرائسنا", ru: "НАСТОЯЩИЕ НЕВЕСТЫ" },
   "nav.appointment": { tr: "RANDEVU", en: "APPOINTMENT", ar: "حجز موعد", ru: "ЗАПИСЬ" },
+  "nav.bridalMakeup": { tr: "DÜĞÜN MAKYAJI", en: "BRIDAL MAKEUP", ar: "مكياج العروس", ru: "СВАДЕБНЫЙ МАКИЯЖ" },
   "nav.contact": { tr: "İLETİŞİM", en: "CONTACT", ar: "تواصل معنا", ru: "КОНТАКТЫ" },
   "header.announcement": { tr: "Kişiye özel couture · Ölçüye özel · Randevu ile", en: "Personalised couture · Made to measure · By appointment", ar: "كوتور مصمّم خصيصاً · مُفصّل على المقاس · بموعد مسبق", ru: "Индивидуальная couture · Пошив по меркам · По записи" },
   "header.appointmentButton": { tr: "Randevu", en: "Appointment", ar: "حجز موعد", ru: "Запись" },
@@ -245,4 +246,14 @@ export const TRANSLATIONS: Record<string, Record<Locale, string>> = {
   "detail.relatedTitle": { tr: "Benzer Gelinlikler", en: "Similar Gowns", ar: "فساتين مشابهة", ru: "Похожие платья" },
   "detail.waText": { tr: 'Merhaba, "{name}" modeli için randevu almak istiyorum.', en: 'Hello, I would like to book an appointment for the "{name}" gown.', ar: 'مرحبًا، أودّ حجز موعد لفستان "{name}".', ru: 'Здравствуйте, я хотела бы записаться на примерку платья «{name}».' },
   "detail.imageAlt": { tr: "{name} — görsel {n}", en: "{name} — image {n}", ar: "{name} — صورة {n}", ru: "{name} — фото {n}" },
+
+  // --- Düğün makyajı (sanal deneme demosu) --- //
+  "makeup.eyebrow": { tr: "Sanal Deneme · Demo", en: "Virtual Try-On · Demo", ar: "تجربة افتراضية · عرض تجريبي", ru: "Виртуальная примерка · Демо" },
+  "makeup.title": { tr: "Düğün makyajınızı önceden deneyin", en: "Try your bridal makeup before the day", ar: "جرّبي مكياج زفافكِ مسبقًا", ru: "Примерьте свадебный макияж заранее" },
+  "makeup.subtitle": { tr: "Klasik, doğal, romantik ya da kına gecesi… Hazır gelin görünümlerinden birini seçin, ardından ruj, far, allık ve kirpiği dilediğiniz gibi ayarlayın. Örnek yüzde ya da kendi fotoğrafınızda.", en: "Classic, natural, romantic or henna night… Choose one of our ready bridal looks, then fine-tune lipstick, eyeshadow, blush and lashes as you wish. On a sample face or on your own photo.", ar: "كلاسيكي، طبيعي، رومانسي أو ليلة الحناء… اختاري إحدى إطلالات العروس الجاهزة، ثم عدّلي أحمر الشفاه وظلال العيون وأحمر الخدود والرموش كما تشائين. على وجه نموذجي أو على صورتكِ.", ru: "Классика, натуральный, романтичный образ или ночь хны… Выберите готовый свадебный образ, затем настройте помаду, тени, румяна и ресницы по своему вкусу. На образце лица или на вашем фото." },
+  "makeup.privacy": { tr: "Fotoğrafınız cihazınızdan çıkmaz; tüm işlem tarayıcınızda yapılır.", en: "Your photo never leaves your device; everything happens in your browser.", ar: "صورتكِ لا تغادر جهازكِ؛ تتم المعالجة بالكامل في متصفحكِ.", ru: "Ваше фото не покидает устройство; всё происходит в браузере." },
+  "makeup.ctaEyebrow": { tr: "Gelin provası", en: "Bridal trial", ar: "بروفة العروس", ru: "Примерка невесты" },
+  "makeup.ctaTitle": { tr: "Görünümünüzü gelinliğinizle birlikte konuşalım", en: "Let's discuss your look together with your gown", ar: "لنتحدث عن إطلالتكِ مع فستان زفافكِ", ru: "Обсудим ваш образ вместе с платьем" },
+  "makeup.ctaText": { tr: "Beğendiğiniz makyajı kaydedin, atölye randevunuza getirin; gelinliğinizle uyumunu birlikte değerlendirelim.", en: "Save the makeup you like and bring it to your atelier appointment; we'll consider together how it pairs with your gown.", ar: "احفظي المكياج الذي أعجبكِ وأحضريه إلى موعدكِ في المشغل؛ لنقيّم معًا انسجامه مع فستانكِ.", ru: "Сохраните понравившийся макияж и возьмите его на приём в ателье — вместе оценим, как он сочетается с платьем." },
+  "makeup.whatsappText": { tr: "Merhaba, düğün makyajı denemesini gördüm; randevu almak istiyorum.", en: "Hello, I saw the bridal makeup try-on and would like to book an appointment.", ar: "مرحبًا، شاهدت تجربة مكياج العروس وأودّ حجز موعد.", ru: "Здравствуйте, я увидела примерку свадебного макияжа и хотела бы записаться на приём." },
 };

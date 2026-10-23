@@ -1,0 +1,799 @@
+/*
+ * Düğün makyajı stüdyosu. Celine token'larına köprü (globals.css @theme ile aynı değerler;
+ * CSS modülü Tailwind taramasına girmediği için yedek değerler satır içinde).
+ */
+.studio {
+  --ink: var(--color-ink, #2a2622);
+  --ink-muted: var(--color-muted, #6b6259);
+  --ink-subtle: var(--color-faint, #9a8880);
+  --on-ink: var(--color-cream, #ffffff);
+  --surface: var(--color-cream, #ffffff);
+  --surface-muted: var(--color-powder-deep, #e7d6d3);
+  --border: var(--color-rose-soft, #d8beb9);
+  --bg: var(--color-powder, #f6ecea);
+  --rose: var(--color-rose, #c9a9a6);
+  --warning: #c49a5c;
+  --danger: #a3443a;
+  --radius-md: 2px;
+  --radius-xl: 2px;
+  --shadow-card: none;
+  --gutter: 24px;
+  --header-h: 68px;
+
+  display: grid;
+  gap: 20px;
+}
+
+/* ───────── Demo / Sen de dene ───────── */
+
+.modes {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  justify-self: start;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: var(--surface);
+}
+
+.mode {
+  min-height: 40px;
+  padding: 8px 22px;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.mode[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.layout {
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+    align-items: start;
+    gap: 40px;
+  }
+}
+
+/* ───────── Sahne (fotoğraf oranı korunur; sündürme yok) ───────── */
+
+.stage {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 3 / 4;
+  max-height: 78vh;
+  width: 100%;
+  max-width: 560px;
+  justify-self: center;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background: var(--surface-muted);
+  box-shadow: var(--shadow-card);
+}
+
+.stageWrap {
+  display: grid;
+  justify-items: center;
+  min-width: 0;
+}
+
+/* Telefonda yüz üstte sabit kalır; renkler altından kayar (seçerken yüz hep görünür). */
+@media (max-width: 899px) {
+  .stageWrap {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 2;
+    margin-inline: calc(-1 * var(--gutter));
+    padding: 8px var(--gutter) 10px;
+    background: var(--bg);
+    box-shadow: 0 8px 12px -10px rgb(0 0 0 / 0.15);
+  }
+
+  .stage {
+    width: auto;
+    height: min(50vh, 133vw);
+    max-height: none;
+  }
+}
+
+.canvas,
+.fx {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Geçiş katmanı: ana tuvalin üstünde; animasyon dışında görünmez. */
+.fx {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Sürme efektinin ışıltılı kenarı. */
+.sweep {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  margin-left: -1px;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, #fff 18%, #fff 82%, transparent);
+  box-shadow:
+    0 0 12px 3px rgb(255 255 255 / 0.75),
+    0 0 36px 10px rgb(233 197 178 / 0.55);
+}
+
+/* Fotoğraf incelenirken tarama ışığı. */
+.scan {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.scan::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -30%;
+  height: 30%;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgb(233 197 178 / 0.28) 70%,
+    rgb(255 255 255 / 0.85) 98%,
+    transparent
+  );
+  animation: scan 1.7s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes scan {
+  to {
+    top: 100%;
+  }
+}
+
+.badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 5px 10px;
+  border-radius: 2px;
+  background: rgb(42 38 34 / 0.55);
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.status {
+  position: absolute;
+  inset: auto 16px 16px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  color: var(--ink);
+  font-size: 0.875rem;
+  text-align: center;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.compare {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 2px;
+  background: rgb(42 38 34 / 0.6);
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* ───────── Ölçü rehberi ───────── */
+
+.guide {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  height: 100%;
+  padding: 28px 24px;
+  background: var(--surface);
+}
+
+.guideTitle {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.guideLead {
+  color: var(--ink-muted);
+}
+
+.guideList {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 8px;
+  padding-left: 18px;
+  font-size: 0.9375rem;
+}
+
+.guideList strong {
+  font-weight: 500;
+}
+
+.guideNote {
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+
+/* ───────── Panel ───────── */
+
+.panel {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.issues {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 12px 14px 12px 30px;
+  border: 1px solid var(--warning);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--warning) 8%, var(--surface));
+  font-size: 0.875rem;
+}
+
+.issues li[data-blocking] {
+  color: var(--danger);
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  min-height: 44px;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  margin-bottom: -1px;
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.tab {
+  padding-inline: 6px;
+  white-space: nowrap;
+}
+
+@media (max-width: 399px) {
+  .tab {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+  }
+}
+
+.tab[aria-selected="true"] {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+.tabPanel {
+  display: grid;
+  gap: 18px;
+}
+
+.group {
+  display: grid;
+  gap: 10px;
+}
+
+.groupLabel {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.swatch {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid rgb(0 0 0 / 0.08);
+  border-radius: 50%;
+  background: var(--surface);
+  transition: transform 0.12s ease;
+}
+
+.swatch[aria-pressed="true"] {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ink);
+}
+
+.swatch:disabled {
+  opacity: 0.45;
+}
+
+@media (hover: hover) {
+  .swatch:not(:disabled):hover {
+    transform: scale(1.08);
+  }
+}
+
+/* Doku kutuları: gerçek saç tutamı / dudak / kaş / göz, yuvarlatılmış kare. */
+.swatches[data-texture] {
+  gap: 8px;
+}
+
+.swatches[data-texture] .swatch {
+  width: 54px;
+  height: 54px;
+  border-radius: 2px;
+  background-size: cover;
+  background-position: center;
+}
+
+.swatches[data-texture="lash"] .swatch {
+  position: relative;
+}
+
+.ink {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+/* Pudra kutusu: üstte ışık, altta hafif gölge; renk satır içinden. */
+.swatches[data-pan] .swatch:not(.none, .customSwatch) {
+  background-image:
+    radial-gradient(circle at 32% 28%, rgb(255 255 255 / 0.42), transparent 44%),
+    radial-gradient(circle at 68% 76%, rgb(0 0 0 / 0.16), transparent 58%);
+  border: 3px solid var(--surface);
+  outline: 1px solid rgb(0 0 0 / 0.08);
+}
+
+.groupValue {
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--ink);
+}
+
+.none {
+  background:
+    linear-gradient(135deg, transparent 47%, var(--ink-subtle) 47%, var(--ink-subtle) 53%, transparent 53%),
+    var(--surface);
+}
+
+.chip {
+  justify-self: start;
+  min-height: 36px;
+  padding: 6px 16px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: var(--surface);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.chip[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--on-ink);
+}
+
+.amount {
+  display: grid;
+  grid-template-columns: auto 1fr 3.5ch;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.875rem;
+  color: var(--ink-muted);
+}
+
+.amount input {
+  width: 100%;
+  accent-color: var(--ink);
+}
+
+.amountValue {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.hint {
+  font-size: 0.875rem;
+  color: var(--ink-muted);
+}
+
+.privacy {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+
+/* ───────── Giriş ve geçiş animasyonları ───────── */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.86);
+  }
+  60% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.modes {
+  animation: rise 0.5s ease-out both 0.05s;
+}
+
+.stageWrap {
+  animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both 0.12s;
+}
+
+.panel {
+  animation: rise 0.6s ease-out both 0.22s;
+}
+
+.tabPanel {
+  animation: rise 0.28s ease-out both;
+}
+
+.compare {
+  animation: rise 0.4s ease-out both 0.2s;
+}
+
+.mode {
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.tab {
+  transition:
+    color 0.2s ease,
+    border-color 0.25s ease;
+}
+
+.swatch {
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+.swatch:active:not(:disabled) {
+  transform: scale(0.9);
+}
+
+.swatch[aria-pressed="true"] {
+  animation: pop 0.32s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modes,
+  .stageWrap,
+  .panel,
+  .tabPanel,
+  .compare,
+  .swatch[aria-pressed="true"],
+  .scan::before {
+    animation: none;
+  }
+
+  .mode,
+  .tab,
+  .swatch {
+    transition: none;
+  }
+}
+
+/* ───────── Sınırsız renk ───────── */
+
+.customSwatch {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  background: conic-gradient(from 0deg, #e0565b, #e8b04e, #9cc46c, #4fb6b0, #5b7fd6, #a466c9, #e0565b);
+}
+
+.customSwatch::after {
+  content: "+";
+  color: #fff;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.35);
+}
+
+.customSwatch[data-on] {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ink);
+}
+
+.customSwatch[data-on]::after {
+  content: none;
+}
+
+.customSwatch[data-disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.customDot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.colorInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.customSwatch:focus-within {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.tuner {
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  animation: rise 0.25s ease-out both;
+}
+
+.tunerRow {
+  display: grid;
+  grid-template-columns: 7.5ch 1fr;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+
+.tunerRange {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  border: 1px solid rgb(0 0 0 / 0.08);
+}
+
+.tunerRange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--ink);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+}
+
+.tunerRange::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--ink);
+}
+
+.tunerHex {
+  justify-self: end;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  color: var(--ink-subtle);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tuner {
+    animation: none;
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ───────── Manken seçici ───────── */
+
+.models {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px 2px 8px;
+  scrollbar-width: none;
+  animation: rise 0.5s ease-out both 0.08s;
+}
+
+.models::-webkit-scrollbar {
+  display: none;
+}
+
+.model {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--surface-muted);
+  box-shadow: 0 0 0 1px var(--border);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+.model img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 32%;
+  display: block;
+}
+
+.model[aria-pressed="true"] {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ink);
+}
+
+@media (hover: hover) {
+  .model:hover {
+    transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .models {
+    animation: none;
+  }
+}
+
+/* ───────── Hazır düğün makyajı görünümleri ───────── */
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+@media (min-width: 640px) and (max-width: 899px) {
+  .presets {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.preset {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+  padding: 12px 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: var(--surface);
+  color: var(--ink);
+  text-align: left;
+  transition:
+    border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.preset:disabled {
+  opacity: 0.5;
+}
+
+@media (hover: hover) {
+  .preset:not(:disabled):hover {
+    border-color: var(--ink);
+  }
+}
+
+.preset[aria-pressed="true"] {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.presetDots {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.presetDots span {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08);
+}
+
+.presetName {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  line-height: 1.15;
+}
+
+.presetNote {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--ink-muted);
+}
